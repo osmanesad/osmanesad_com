@@ -1,506 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
     <meta charset="UTF-8" />
-    <title>Osman Esad — Designer, Developer, Publisher</title>
+    <title>Osman Esad — Kurucu, Tasarımcı, Geliştirici</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description"
-        content="Osman Esad — designer, developer, publisher. Writing, art, and code in one place." />
-    <style>
-        :root {
-            --bg: #f5f5f5;
-            --bg-alt: #ffffff;
-            --text: #111111;
-            --muted: #666666;
-            --border: #dddddd;
-            --accent: #111111;
-            --radius: 14px;
-            --transition: 200ms ease;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-                "Segoe UI", sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .page {
-            min-height: 100vh;
-            padding: 24px;
-        }
-
-        .container {
-            max-width: 1080px;
-            margin: 0 auto;
-        }
-
-        /* Header / Nav */
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            font-size: 14px;
-            text-transform: lowercase;
-            letter-spacing: 0.12em;
-            font-weight: 600;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 18px;
-            font-size: 14px;
-        }
-
-        .nav-links a {
-            position: relative;
-            padding-bottom: 3px;
-            cursor: pointer;
-        }
-
-        .nav-links a::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 0%;
-            height: 1px;
-            background: var(--accent);
-            transition: width var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a.is-active {
-            font-weight: 500;
-        }
-
-        .nav-links a.is-active::after {
-            width: 100%;
-        }
-
-        /* Generic page sections */
-        .page-section {
-            display: none;
-            animation: fadeIn 180ms ease-out;
-        }
-
-        .page-section.is-active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(4px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Hero (Home) */
-        .hero {
-            display: grid;
-            grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .hero-main-title {
-            font-size: clamp(32px, 5vw, 44px);
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            margin-bottom: 8px;
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-            text-transform: lowercase;
-            letter-spacing: 0.18em;
-            color: var(--muted);
-            margin-bottom: 24px;
-        }
-
-        .hero-text {
-            font-size: 16px;
-            max-width: 480px;
-            color: #222;
-            margin-bottom: 24px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 9px 18px;
-            border-radius: 999px;
-            font-size: 14px;
-            border: 1px solid var(--border);
-            background: transparent;
-            cursor: pointer;
-            transition: background var(--transition), transform var(--transition),
-                box-shadow var(--transition), border-color var(--transition);
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            border-color: var(--accent);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-        }
-
-        .btn-secondary:hover {
-            background: #ffffff;
-            border-color: #bbbbbb;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        .hero-side-card {
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--bg-alt);
-            padding: 18px 18px 16px;
-            font-size: 13px;
-            align-self: flex-start;
-        }
-
-        .hero-side-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-
-        .hero-side-list {
-            list-style: none;
-            margin-top: 4px;
-        }
-
-        .hero-side-list li {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .hero-side-list li:last-child {
-            border-bottom: none;
-        }
-
-        .hero-side-label {
-            color: var(--muted);
-        }
-
-        .hero-side-value a {
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-
-        /* Home: sections grid */
-        .sections-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .section-card {
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--bg-alt);
-            padding: 20px 18px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 160px;
-            transition: transform var(--transition), box-shadow var(--transition),
-                border-color var(--transition), background var(--transition);
-        }
-
-        .section-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
-            border-color: #cccccc;
-            background: #ffffff;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .section-desc {
-            font-size: 14px;
-            color: var(--muted);
-            margin-bottom: 18px;
-        }
-
-        .section-action button {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            border: none;
-            background: none;
-            padding: 0;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .section-action button::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 0%;
-            height: 1px;
-            background: var(--accent);
-            transition: width var(--transition);
-        }
-
-        .section-action button:hover::after {
-            width: 100%;
-        }
-
-        /* About card (home) */
-        .about-home {
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--bg-alt);
-            padding: 24px 22px;
-            margin-bottom: 28px;
-        }
-
-        .about-home-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .about-home-body {
-            font-size: 14px;
-            color: #222;
-            max-width: 640px;
-            margin-bottom: 14px;
-        }
-
-        .about-home-meta {
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        /* List pages (Writing / Art / Code) */
-
-        .page-header {
-            margin-bottom: 24px;
-        }
-
-        .page-kicker {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: var(--muted);
-            margin-bottom: 6px;
-        }
-
-        .page-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .page-subtitle {
-            font-size: 14px;
-            color: var(--muted);
-            max-width: 520px;
-        }
-
-        .item-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 16px;
-            margin-bottom: 32px;
-        }
-
-        .item-card {
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--bg-alt);
-            padding: 16px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            transition: border-color var(--transition), box-shadow var(--transition),
-                background var(--transition), transform var(--transition);
-        }
-
-        .item-card:hover {
-            border-color: #cfcfcf;
-            background: #ffffff;
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .item-title-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            align-items: baseline;
-        }
-
-        .item-title {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .item-meta {
-            font-size: 12px;
-            color: var(--muted);
-            white-space: nowrap;
-        }
-
-        .item-desc {
-            font-size: 14px;
-            color: #222;
-        }
-
-        .item-link {
-            font-size: 13px;
-            margin-top: 4px;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .item-link span.icon {
-            font-size: 11px;
-            line-height: 1;
-        }
-
-        /* Simple tag styles (optional) */
-        .item-tags {
-            margin-top: 4px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .item-tag {
-            font-size: 11px;
-            padding: 2px 7px;
-            border-radius: 999px;
-            border: 1px solid #e2e2e2;
-            color: var(--muted);
-        }
-
-        /* Footer */
-        footer {
-            font-size: 12px;
-            color: var(--muted);
-            border-top: 1px solid #e4e4e4;
-            padding-top: 14px;
-            margin-top: 18px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .footer-links a {
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-
-        /* Responsive */
-        @media (max-width: 800px) {
-            .page {
-                padding: 16px;
-            }
-
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-
-            .nav-links {
-                gap: 14px;
-                flex-wrap: wrap;
-            }
-
-            .hero {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-side-card {
-                order: -1;
-            }
-
-            .sections-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .item-title-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            footer {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-    </style>
+        content="Osman Esad — founder, designer, developer and publisher. Writing, art and code in one place." />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script src="assets/main.js" defer></script>
 </head>
 
 <body>
@@ -510,57 +18,69 @@
             <header>
                 <div class="logo">osmanesad</div>
                 <nav class="nav-links">
-                    <!-- data-page ile JS hangi 'sayfayı' açacağını biliyor -->
-                    <a data-page="home" class="is-active">Home</a>
-                    <a data-page="writing">Writing</a>
-                    <a data-page="art">Art</a>
-                    <a data-page="code">Code</a>
-                    <a data-page="about">About</a>
+                    <a id="nav-home" data-page="home" class="is-active">Ana sayfa</a>
+                    <a id="nav-writing" data-page="writing">Yazılar</a>
+                    <a id="nav-art" data-page="art">Çizimler</a>
+                    <a id="nav-code" data-page="code">Kod</a>
+                    <a id="nav-about" data-page="about">Hakkında</a>
                 </nav>
+                <div class="lang-switch">
+                    <button class="lang-btn is-active" data-lang="tr">TR</button>
+                    <span class="lang-divider">/</span>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
             </header>
 
             <!-- HOME PAGE -->
             <main id="page-home" class="page-section is-active">
                 <!-- Hero -->
-                <section class="hero" aria-label="Introduction">
+                <section class="hero" aria-label="Giriş">
                     <div>
-                        <h1 class="hero-main-title">Osman Esad</h1>
-                        <div class="hero-subtitle">designer · developer · publisher</div>
-                        <p class="hero-text">
-                            I build small tools, write about process, and keep a visual
-                            sketchbook. This page is a hub for my writing, art, and code.
+                        <h1 id="hero-title" class="hero-main-title">
+                            Osman Esad
+                        </h1>
+                        <div id="hero-subtitle" class="hero-subtitle">
+                            kurucu · tasarımcı · geliştirici · yayıncı
+                        </div>
+                        <p id="hero-text" class="hero-text">
+                            Kahve, kitap ve kültür etrafında DASE markasını kurarken; yazılım araçları,
+                            çizimler ve kişisel yazılar üretiyorum. Bu sayfa, tüm işlerin toplandığı
+                            sade bir harita.
                         </p>
                         <div class="hero-buttons">
-                            <a class="btn btn-primary" data-page-link="writing">View writing</a>
-                            <a class="btn btn-secondary" data-page-link="art">View art</a>
-                            <a href="mailto:byesad@gmail.com" class="btn btn-secondary">Contact</a>
+                            <a id="hero-btn-writing" class="btn btn-primary" data-page-link="writing">
+                                Yazılara git
+                            </a>
+                            <a id="hero-btn-art" class="btn btn-secondary" data-page-link="art">
+                                Çizimlere bak
+                            </a>
+                            <a id="hero-btn-contact" href="mailto:byesad@gmail.com" class="btn btn-secondary">
+                                E-posta
+                            </a>
                         </div>
                     </div>
 
                     <aside class="hero-side-card">
-                        <div class="hero-side-title">Currently</div>
+                        <div id="hero-currently-title" class="hero-side-title">Şu anda</div>
                         <ul class="hero-side-list">
                             <li>
-                                <span class="hero-side-label">Writing</span>
+                                <span id="hero-currently-writing-label" class="hero-side-label">Yazıyorum</span>
                                 <span class="hero-side-value">
-                                    <!-- TODO: gerçek Medium profil linkini koy -->
-                                    <a href="https://medium.com/@YOUR_USERNAME" target="_blank"
+                                    <a href="https://osmanesad.medium.com" target="_blank"
                                         rel="noopener noreferrer">Medium</a>
                                 </span>
                             </li>
                             <li>
-                                <span class="hero-side-label">Art</span>
+                                <span id="hero-currently-art-label" class="hero-side-label">Çiziyorum</span>
                                 <span class="hero-side-value">
-                                    <!-- TODO: gerçek ArtStation profil linkini koy -->
-                                    <a href="https://www.artstation.com/YOUR_USERNAME" target="_blank"
+                                    <a href="https://www.artstation.com/masondase" target="_blank"
                                         rel="noopener noreferrer">ArtStation</a>
                                 </span>
                             </li>
                             <li>
-                                <span class="hero-side-label">Code</span>
+                                <span id="hero-currently-code-label" class="hero-side-label">Kod yazıyorum</span>
                                 <span class="hero-side-value">
-                                    <!-- TODO: gerçek GitHub profil linkini koy -->
-                                    <a href="https://github.com/YOUR_USERNAME" target="_blank"
+                                    <a href="https://github.com/osmanesad" target="_blank"
                                         rel="noopener noreferrer">GitHub</a>
                                 </span>
                             </li>
@@ -569,71 +89,75 @@
                 </section>
 
                 <!-- Sections grid -->
-                <section class="sections-grid" aria-label="Work sections">
+                <section class="sections-grid" aria-label="İşler">
                     <!-- Writing -->
                     <article class="section-card">
                         <div>
-                            <h2 class="section-title">Writing</h2>
-                            <p class="section-desc">
-                                Essays, notes, and thoughts on process, tools, and everyday work.
+                            <h2 id="home-writing-title" class="section-title">Yazılar</h2>
+                            <p id="home-writing-desc" class="section-desc">
+                                Süreç, araçlar ve gündelik hayat üzerine denemeler ve kısa notlar.
                             </p>
                         </div>
                         <div class="section-action">
-                            <button type="button" data-page-link="writing">View all writing</button>
+                            <button id="home-writing-button" type="button" data-page-link="writing">
+                                Tüm yazıları gör
+                            </button>
                         </div>
                     </article>
 
                     <!-- Art -->
                     <article class="section-card">
                         <div>
-                            <h2 class="section-title">Art</h2>
-                            <p class="section-desc">
-                                Illustrations, visual experiments, and studies in light and form.
+                            <h2 id="home-art-title" class="section-title">Çizimler</h2>
+                            <p id="home-art-desc" class="section-desc">
+                                Dijital ve geleneksel medyada eskizler, deneyler ve serbest çalışmalar.
                             </p>
                         </div>
                         <div class="section-action">
-                            <button type="button" data-page-link="art">View all art</button>
+                            <button id="home-art-button" type="button" data-page-link="art">
+                                Çizim arşivi
+                            </button>
                         </div>
                     </article>
 
                     <!-- Code -->
                     <article class="section-card">
                         <div>
-                            <h2 class="section-title">Code</h2>
-                            <p class="section-desc">
-                                Side projects, tools, and open-source experiments I share online.
+                            <h2 id="home-code-title" class="section-title">Kod projeleri</h2>
+                            <p id="home-code-desc" class="section-desc">
+                                Stok takibi, otomasyon ve günlük işler için küçük araçlar ve deneyler.
                             </p>
                         </div>
                         <div class="section-action">
-                            <button type="button" data-page-link="code">View all code</button>
+                            <button id="home-code-button" type="button" data-page-link="code">
+                                Projelere bak
+                            </button>
                         </div>
                     </article>
                 </section>
 
                 <!-- About snippet -->
-                <section class="about-home" aria-label="About Osman">
-                    <h2 class="about-home-title">About</h2>
-                    <div class="about-home-body">
-                        I’m Osman Esad, a designer and developer who likes to publish things —
-                        from small tools and interfaces to notes on process and visual
-                        sketchbooks. I use this page as a simple map to the places where my
-                        work lives.
+                <section class="about-home" aria-label="Kısa bilgi">
+                    <h2 id="about-home-title" class="about-home-title">Kısaca</h2>
+                    <div id="about-home-body" class="about-home-body">
+                        Kitap, kafe ve kırtasiye alanlarında operasyon ve müşteri deneyimi
+                        tarafında çalıştım; aynı zamanda yazılım ve tasarım üretmeye devam ettim.
+                        Şu anda bu birikimi DASE markası altında birleştiriyorum.
                     </div>
-                    <div class="about-home-meta">
-                        Based in Istanbul. Open to projects, collaborations, and slow
-                        conversations.
+                    <div id="about-home-meta" class="about-home-meta">
+                        İstanbul’da yaşıyorum. Odaklandığım alanlar: kahve & kültür, stok
+                        yönetimi, küçük yazılım araçları ve görsel işler.
                     </div>
                 </section>
             </main>
 
             <!-- WRITING PAGE -->
-            <section id="page-writing" class="page-section" aria-label="Writing">
+            <section id="page-writing" class="page-section" aria-label="Yazılar">
                 <header class="page-header">
-                    <div class="page-kicker">Writing</div>
-                    <h1 class="page-title">Selected essays & notes</h1>
-                    <p class="page-subtitle">
-                        A small selection of writing on process, tools, and everyday work.
-                        Links can point to Medium or live directly here.
+                    <div id="writing-kicker" class="page-kicker">Yazılar</div>
+                    <h1 id="writing-title" class="page-title">Seçilmiş yazılar</h1>
+                    <p id="writing-subtitle" class="page-subtitle">
+                        Medium’da yayımladığım bazı denemeler ve kısa metinler.
                     </p>
                 </header>
 
@@ -641,16 +165,16 @@
                     <!-- ITEM 1 -->
                     <article class="item-card">
                         <div class="item-title-row">
-                            <h2 class="item-title">On building small tools slowly</h2>
-                            <span class="item-meta">2025 · essay</span>
+                            <h2 id="writing-item1-title" class="item-title">Yol</h2>
+                            <span id="writing-item1-meta" class="item-meta">deneme · Medium</span>
                         </div>
-                        <p class="item-desc">
-                            Thoughts on working at a slower pace, designing tiny utilities, and
-                            keeping the scope humane.
+                        <p id="writing-item1-desc" class="item-desc">
+                            Yön arayışı, mesafe ve kendi yolunu kurmak üzerine kişisel bir metin.
                         </p>
-                        <a class="item-link" href="https://medium.com/@YOUR_USERNAME" target="_blank"
+                        <a id="writing-item1-link" class="item-link"
+                            href="https://osmanesad.medium.com/yol-a1e5287a4ad7" target="_blank"
                             rel="noopener noreferrer">
-                            <span>Read on Medium</span>
+                            <span>Medium’da oku</span>
                             <span class="icon">↗</span>
                         </a>
                     </article>
@@ -658,230 +182,209 @@
                     <!-- ITEM 2 -->
                     <article class="item-card">
                         <div class="item-title-row">
-                            <h2 class="item-title">Notes from the sketchbook</h2>
-                            <span class="item-meta">2024 · notes</span>
+                            <h2 id="writing-item2-title" class="item-title">Bağlantı</h2>
+                            <span id="writing-item2-meta" class="item-meta">deneme · Medium</span>
                         </div>
-                        <p class="item-desc">
-                            Short fragments collected from daily sketching, both visual and
-                            written — a log of experiments.
+                        <p id="writing-item2-desc" class="item-desc">
+                            İnsanlar, yerler ve eşyalar arasındaki bağların nasıl kurulduğuna dair
+                            kısa bir gözlem.
                         </p>
-                        <div class="item-tags">
-                            <span class="item-tag">process</span>
-                            <span class="item-tag">sketchbook</span>
-                        </div>
+                        <a id="writing-item2-link" class="item-link"
+                            href="https://osmanesad.medium.com/ba%C4%9Flant%C4%B1-d1ff97782228" target="_blank"
+                            rel="noopener noreferrer">
+                            <span>Medium’da oku</span>
+                            <span class="icon">↗</span>
+                        </a>
                     </article>
 
                     <!-- ITEM 3 -->
                     <article class="item-card">
                         <div class="item-title-row">
-                            <h2 class="item-title">Designing for one person at a time</h2>
-                            <span class="item-meta">2024 · essay</span>
+                            <h2 id="writing-item3-title" class="item-title">Makine</h2>
+                            <span id="writing-item3-meta" class="item-meta">deneme · Medium</span>
                         </div>
-                        <p class="item-desc">
-                            An attempt to design products with a single, real person in mind
-                            instead of a generic “user”.
+                        <p id="writing-item3-desc" class="item-desc">
+                            Makine fikrinden yola çıkarak sistemler, araçlar ve insan arasındaki
+                            ilişkiye bakan bir metin.
                         </p>
-                        <a class="item-link" href="https://medium.com/@YOUR_USERNAME" target="_blank"
+                        <a id="writing-item3-link" class="item-link"
+                            href="https://osmanesad.medium.com/makine-486124fa4a0d" target="_blank"
                             rel="noopener noreferrer">
-                            <span>Read article</span>
+                            <span>Medium’da oku</span>
                             <span class="icon">↗</span>
                         </a>
-                    </article>
-
-                    <!-- ITEM 4 -->
-                    <article class="item-card">
-                        <div class="item-title-row">
-                            <h2 class="item-title">Quiet interfaces</h2>
-                            <span class="item-meta">2023 · short</span>
-                        </div>
-                        <p class="item-desc">
-                            A short piece about interfaces that stay in the background and make
-                            room for the work itself.
-                        </p>
                     </article>
                 </div>
             </section>
 
             <!-- ART PAGE -->
-            <section id="page-art" class="page-section" aria-label="Art">
+            <section id="page-art" class="page-section" aria-label="Çizimler">
                 <header class="page-header">
-                    <div class="page-kicker">Art</div>
-                    <h1 class="page-title">Selected visual work</h1>
-                    <p class="page-subtitle">
-                        Illustrations, visual experiments, and sketchbook pages. Items can
-                        link out to ArtStation or stay as a simple catalog here.
+                    <div id="art-kicker" class="page-kicker">Çizimler</div>
+                    <h1 id="art-title" class="page-title">Seçilmiş görseller</h1>
+                    <p id="art-subtitle" class="page-subtitle">
+                        Dijital ve geleneksel tekniklerle yaptığım bazı çalışmalar. Daha fazlası
+                        ArtStation’da.
                     </p>
                 </header>
 
-                <div class="item-list">
+                <div class="art-grid">
                     <!-- ART 1 -->
-                    <article class="item-card">
-                        <div class="item-title-row">
-                            <h2 class="item-title">City fragments</h2>
-                            <span class="item-meta">series · digital</span>
+                    <article class="item-card art-card">
+                        <img src="assets/art1.jpg" alt="art1" class="art-image" />
+                        <div class="art-text">
+                            <div class="item-title-row">
+                                <h2 id="art-item1-title" class="item-title">Art 1</h2>
+                                <span id="art-item1-meta" class="item-meta">pastel · renkli</span>
+                            </div>
+                            <p id="art-item1-desc" class="item-desc">
+                                Yoğun renkler ve katmanlı doku ile yapılmış, kaotik bir portre
+                                kompozisyonu.
+                            </p>
                         </div>
-                        <p class="item-desc">
-                            Small compositions built from city textures, light, and forgotten
-                            corners.
-                        </p>
-                        <a class="item-link" href="https://www.artstation.com/YOUR_USERNAME" target="_blank"
-                            rel="noopener noreferrer">
-                            <span>View on ArtStation</span>
-                            <span class="icon">↗</span>
-                        </a>
                     </article>
 
                     <!-- ART 2 -->
-                    <article class="item-card">
-                        <div class="item-title-row">
-                            <h2 class="item-title">Study in lines</h2>
-                            <span class="item-meta">study · ink</span>
+                    <article class="item-card art-card">
+                        <img src="assets/art2.jpg" alt="art2" class="art-image" />
+                        <div class="art-text">
+                            <div class="item-title-row">
+                                <h2 id="art-item2-title" class="item-title">Art 2</h2>
+                                <span id="art-item2-meta" class="item-meta">dijital eskiz</span>
+                            </div>
+                            <p id="art-item2-desc" class="item-desc">
+                                Kuleler ve kubbelerden oluşan, şehir silueti tadında mimari bir
+                                eskiz.
+                            </p>
                         </div>
-                        <p class="item-desc">
-                            A series of line-based studies focusing on rhythm, repetition, and
-                            negative space.
-                        </p>
                     </article>
 
                     <!-- ART 3 -->
-                    <article class="item-card">
-                        <div class="item-title-row">
-                            <h2 class="item-title">Night windows</h2>
-                            <span class="item-meta">digital · color</span>
+                    <article class="item-card art-card">
+                        <img src="assets/art3.jpg" alt="art3" class="art-image" />
+                        <div class="art-text">
+                            <div class="item-title-row">
+                                <h2 id="art-item3-title" class="item-title">Art 3</h2>
+                                <span id="art-item3-meta" class="item-meta">metin + çizim</span>
+                            </div>
+                            <p id="art-item3-desc" class="item-desc">
+                                El yazısı katmanlarıyla kaplanmış, figür ve metni iç içe geçiren
+                                deneysel bir çalışma.
+                            </p>
                         </div>
-                        <p class="item-desc">
-                            Scenes of lit windows at night, exploring quiet domestic moments in
-                            a dense city.
-                        </p>
-                        <div class="item-tags">
-                            <span class="item-tag">color</span>
-                            <span class="item-tag">atmosphere</span>
-                        </div>
-                    </article>
-
-                    <!-- ART 4 -->
-                    <article class="item-card">
-                        <div class="item-title-row">
-                            <h2 class="item-title">Structures</h2>
-                            <span class="item-meta">series · mixed</span>
-                        </div>
-                        <p class="item-desc">
-                            Abstract structures inspired by architecture, diagrams, and
-                            wayfinding systems.
-                        </p>
                     </article>
                 </div>
+
+                <a id="art-cta-link" class="item-link" href="https://www.artstation.com/masondase" target="_blank"
+                    rel="noopener noreferrer">
+                    <span>Daha fazlası için ArtStation</span>
+                    <span class="icon">↗</span>
+                </a>
             </section>
 
             <!-- CODE PAGE -->
-            <section id="page-code" class="page-section" aria-label="Code">
+            <section id="page-code" class="page-section" aria-label="Kod">
                 <header class="page-header">
-                    <div class="page-kicker">Code</div>
-                    <h1 class="page-title">Selected projects</h1>
-                    <p class="page-subtitle">
-                        A small collection of tools, experiments, and open-source work. Each
-                        card can link to GitHub or a live demo.
+                    <div id="code-kicker" class="page-kicker">Kod</div>
+                    <h1 id="code-title" class="page-title">Seçilmiş projeler</h1>
+                    <p id="code-subtitle" class="page-subtitle">
+                        Stok takibi, otomasyon ve günlük işler için geliştirdiğim bazı küçük
+                        araçlar.
                     </p>
                 </header>
 
                 <div class="item-list">
-                    <!-- CODE 1 -->
+                    <!-- CODE 1 fastStock -->
                     <article class="item-card">
                         <div class="item-title-row">
-                            <h2 class="item-title">fastStock</h2>
-                            <span class="item-meta">Swift · iOS</span>
+                            <h2 id="code-item1-title" class="item-title">fastStock</h2>
+                            <span id="code-item1-meta" class="item-meta">Swift · iOS</span>
                         </div>
-                        <p class="item-desc">
-                            A stock tracking app focused on speed and clarity, built with Swift
-                            and SwiftData.
+                        <p id="code-item1-desc" class="item-desc">
+                            Ürün stoklarını hızlıca takip etmek için tasarladığım, Swift ile
+                            geliştirilmiş bir iOS uygulaması.
                         </p>
-                        <a class="item-link" href="https://github.com/YOUR_USERNAME" target="_blank"
-                            rel="noopener noreferrer">
-                            <span>View on GitHub</span>
+                        <a id="code-item1-link" class="item-link" href="https://github.com/osmanesad/fastStock"
+                            target="_blank" rel="noopener noreferrer">
+                            <span>GitHub reposu</span>
                             <span class="icon">↗</span>
                         </a>
                     </article>
 
-                    <!-- CODE 2 -->
+                    <!-- CODE 2 kitap_stok_takip_py -->
                     <article class="item-card">
                         <div class="item-title-row">
-                            <h2 class="item-title">Barcode stock counter</h2>
-                            <span class="item-meta">Web · JavaScript</span>
+                            <h2 id="code-item2-title" class="item-title">Kitap Stok Takip</h2>
+                            <span id="code-item2-meta" class="item-meta">Python · CLI</span>
                         </div>
-                        <p class="item-desc">
-                            A web-based stock counting tool using the phone camera to scan
-                            barcodes and log quantities.
+                        <p id="code-item2-desc" class="item-desc">
+                            Kitap mağazaları için stok ve hareket takibini kolaylaştıran basit
+                            bir Python aracı.
                         </p>
-                    </article>
-
-                    <!-- CODE 3 -->
-                    <article class="item-card">
-                        <div class="item-title-row">
-                            <h2 class="item-title">Coffee drop landing</h2>
-                            <span class="item-meta">HTML · CSS · JS</span>
-                        </div>
-                        <p class="item-desc">
-                            A minimal landing page template for limited coffee drops and
-                            printed matter.
-                        </p>
-                        <a class="item-link" href="https://github.com/YOUR_USERNAME" target="_blank"
+                        <a id="code-item2-link" class="item-link"
+                            href="https://github.com/osmanesad/kitap_stok_takip_py" target="_blank"
                             rel="noopener noreferrer">
-                            <span>Source on GitHub</span>
+                            <span>GitHub reposu</span>
                             <span class="icon">↗</span>
                         </a>
                     </article>
 
-                    <!-- CODE 4 -->
+                    <!-- CODE 3 GoogleDriveApi -->
                     <article class="item-card">
                         <div class="item-title-row">
-                            <h2 class="item-title">Process notes generator</h2>
-                            <span class="item-meta">Python · CLI</span>
+                            <h2 id="code-item3-title" class="item-title">Google Drive API denemeleri</h2>
+                            <span id="code-item3-meta" class="item-meta">Python · API</span>
                         </div>
-                        <p class="item-desc">
-                            A small command-line script that helps structure daily process
-                            notes into publishable fragments.
+                        <p id="code-item3-desc" class="item-desc">
+                            Google Drive API ile dosya listeleme ve otomasyonlar üzerine
+                            gerçekleştirdiğim test ve denemeler.
                         </p>
+                        <a id="code-item3-link" class="item-link" href="https://github.com/osmanesad/GoogleDriveApi"
+                            target="_blank" rel="noopener noreferrer">
+                            <span>GitHub reposu</span>
+                            <span class="icon">↗</span>
+                        </a>
                     </article>
                 </div>
             </section>
 
             <!-- ABOUT PAGE -->
-            <section id="page-about" class="page-section" aria-label="About">
+            <section id="page-about" class="page-section" aria-label="Hakkında">
                 <header class="page-header">
-                    <div class="page-kicker">About</div>
-                    <h1 class="page-title">Osman Esad</h1>
-                    <p class="page-subtitle">
-                        Designer, developer, and publisher based in Istanbul. This page is a
-                        simple index for ongoing work.
+                    <div id="about-kicker" class="page-kicker">Hakkında</div>
+                    <h1 id="about-title" class="page-title">Osman Esad</h1>
+                    <p id="about-subtitle" class="page-subtitle">
+                        Kahve, kitap ve yazılım ekseninde çalışan; aynı anda hem dükkan işi
+                        hem kod hem de görsel üretim yapan hibrit bir profil.
                     </p>
                 </header>
 
                 <div class="item-list">
                     <article class="item-card">
-                        <p class="item-desc">
-                            I work across interfaces, small tools, and visual experiments. Most
-                            of my projects live in three places: writing, art, and code. Instead
-                            of building a complex portfolio, I’m keeping this space as a quiet
-                            hub that points to where things are actually happening.
+                        <p id="about-block1" class="item-desc">
+                            Kitap-kırtasiye ve kafe sektörlerinde satış, kasa ve operasyon tarafında
+                            uzun yıllar çalıştım. Aynı dönemde yazılım ve tasarım öğrenip küçük
+                            araçlar, arayüzler ve projeler geliştirdim.
                         </p>
                     </article>
 
                     <article class="item-card">
-                        <p class="item-desc">
-                            I enjoy long-term projects, slow iterations, and documenting
-                            process. When possible, I prefer to ship small, focused pieces
-                            rather than big “launches”.
+                        <p id="about-block2" class="item-desc">
+                            DASE, İstanbul’da kurduğum kahve, kitap ve kültür odaklı bir marka.
+                            Seçili kahveler, kitaplar, kırtasiye ve küçük sanat objeleri etrafında
+                            bir alan kurarken; ileride workshop ve etkinliklerle de genişlemeyi
+                            hedefliyorum.
                         </p>
                     </article>
 
                     <article class="item-card">
-                        <p class="item-desc">
-                            If you’d like to collaborate, talk about work, or just say hello,
-                            you can reach me via email. I’m open to remote collaborations,
-                            experimental projects, and carefully scoped client work.
+                        <p id="about-block3" class="item-desc">
+                            Teknik tarafta Swift, Python, JavaScript ve temel web teknolojileri ile
+                            çalışıyorum. Aynı zamanda çizimler, eskizler ve kişisel yazılar
+                            üreterek süreci de görünür kılmaya çalışıyorum.
                         </p>
-                        <a class="item-link" href="mailto:byesad@gmail.com">
-                            <span>Contact via email</span>
+                        <a id="about-contact-link" class="item-link" href="mailto:byesad@gmail.com">
+                            <span>E-posta ile iletişim</span>
                             <span class="icon">↗</span>
                         </a>
                     </article>
@@ -890,72 +393,19 @@
 
             <!-- Footer (common) -->
             <footer>
-                <div>© 2026 · osmanesad</div>
+                <div id="footer-left">© 2026 · Osman Esad Hoşbak</div>
                 <div class="footer-links">
-                    <a href="mailto:byesad@gmail.com">Email</a>
-                    <a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a href="https://medium.com/@YOUR_USERNAME" target="_blank" rel="noopener noreferrer">Medium</a>
-                    <a href="https://www.artstation.com/YOUR_USERNAME" target="_blank"
+                    <a href="mailto:byesad@gmail.com">E-posta</a>
+                    <a href="https://www.linkedin.com/in/osmanesad" target="_blank"
+                        rel="noopener noreferrer">LinkedIn</a>
+                    <a href="https://github.com/osmanesad" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="https://osmanesad.medium.com" target="_blank" rel="noopener noreferrer">Medium</a>
+                    <a href="https://www.artstation.com/masondase" target="_blank"
                         rel="noopener noreferrer">ArtStation</a>
                 </div>
             </footer>
         </div>
     </div>
-
-    <script>
-        // Basit "fake sayfa" sistemi: nav tıklanınca ilgili section açılır
-        const navLinks = document.querySelectorAll(".nav-links a[data-page]");
-        const pageSections = document.querySelectorAll(".page-section");
-
-        function setActivePage(pageName) {
-            // section'lar
-            pageSections.forEach((sec) => {
-                sec.classList.toggle("is-active", sec.id === "page-" + pageName);
-            });
-
-            // nav linkler
-            navLinks.forEach((link) => {
-                const linkPage = link.getAttribute("data-page");
-                link.classList.toggle("is-active", linkPage === pageName);
-            });
-
-            // URL'i hash ile güncelle (isteğe bağlı)
-            window.location.hash = pageName;
-        }
-
-        // Nav tıklama
-        navLinks.forEach((link) => {
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                const pageName = link.getAttribute("data-page");
-                if (pageName) {
-                    setActivePage(pageName);
-                }
-            });
-        });
-
-        // Home içindeki butonlar (View writing / View art / View code)
-        const pageLinkButtons = document.querySelectorAll("[data-page-link]");
-        pageLinkButtons.forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                const pageName = btn.getAttribute("data-page-link");
-                if (pageName) {
-                    setActivePage(pageName);
-                }
-            });
-        });
-
-        // Sayfa ilk açıldığında URL hash varsa onu baz al
-        window.addEventListener("load", () => {
-            const hash = window.location.hash.replace("#", "");
-            if (hash) {
-                setActivePage(hash);
-            } else {
-                setActivePage("home");
-            }
-        });
-    </script>
 </body>
 
 </html>
