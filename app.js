@@ -1,5 +1,66 @@
 const TOP_N = 8;
 
+const SUPABASE_URL = "https://zefzcmrsdvtbliguqedi.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb";
+
+const supabase = window.createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function getSlug() {
+  // Örn: /posts/coffee-notes-001.html -> coffee-notes-001
+  const path = location.pathname.split("/").pop() || "home";
+  return path.replace(".html", "");
+}
+
+async function fetchLikes(slug) {
+  const { data, error } = await supabase
+    .from("post_likes")
+    .select("likes_count")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data?.likes_count ?? 0;
+}
+
+async function incrementLike(slug) {
+  const { data, error } = await supabase.rpc("increment_like", { p_slug: slug });
+  if (error) throw error;
+  return data; // yeni sayı (integer)
+}
+
+async function initLikesUI() {
+  const slug = getSlug();
+
+  const likeBtn = document.getElementById("likeBtn");
+  const likeCountEl = document.getElementById("likeCount");
+  if (!likeBtn || !likeCountEl) return;
+
+  // Sayfa açılınca sayıyı getir
+  try {
+    const current = await fetchLikes(slug);
+    likeCountEl.textContent = current;
+  } catch (e) {
+    console.warn("Like fetch failed:", e);
+  }
+
+  // Tıklanınca artır
+  likeBtn.addEventListener("click", async () => {
+    likeBtn.disabled = true;
+    try {
+      const newCount = await incrementLike(slug);
+      likeCountEl.textContent = newCount;
+    } catch (e) {
+      console.warn("Like increment failed:", e);
+    } finally {
+      likeBtn.disabled = false;
+    }
+  });
+}
+
+initLikesUI();
+
+
+
 // Theme + font size
 const THEMES = {
   white:{bg:'#ffffff',text:'#111111',muted:'#6b6b6b',line:'#e7e7e7',chip:'#f4f4f4',chipText:'#111',shadow:'rgba(0,0,0,0.04)'},
