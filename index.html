@@ -135,7 +135,11 @@
 </aside>
 
 
-  <script src="app.js" defer></script>
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+  window.createSupabaseClient = createClient;
+</script>
+<script type="module" src="./app.js"></script>
   <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
 
 </body>

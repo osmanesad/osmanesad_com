@@ -1,5 +1,36 @@
 const TOP_N = 8;
 
+const SUPABASE_URL = "https://zefzcmrsdvtbliguqedi.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb";
+
+const supabase = window.createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function getSlug() {
+  // Örn: /posts/coffee-notes-001.html -> coffee-notes-001
+  const path = location.pathname.split("/").pop() || "home";
+  return path.replace(".html", "");
+}
+
+async function fetchLikes(slug) {
+  const { data, error } = await supabase
+    .from("post_likes")
+    .select("likes_count")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data?.likes_count ?? 0;
+}
+
+async function incrementLike(slug) {
+  const { data, error } = await supabase.rpc("increment_like", { p_slug: slug });
+  if (error) throw error;
+  return data; // yeni sayı (integer)
+}
+
+
+
+
 // Theme + font size
 const THEMES = {
   white:{bg:'#ffffff',text:'#111111',muted:'#6b6b6b',line:'#e7e7e7',chip:'#f4f4f4',chipText:'#111',shadow:'rgba(0,0,0,0.04)'},
@@ -68,27 +99,71 @@ function fmtDate(iso){
 // Like per post (local)
 const likeBtn=document.getElementById('likeBtn');
 const likeCountEl=document.getElementById('likeCount');
-const Like={
-  postId:null,
-  keyLiked(){ return `liked_once_v1::${this.postId}`; },
-  keyCount(){ return `like_count_v1::${this.postId}`; },
-  setPost(id){ this.postId=id; this.render(); },
-  render(){
-    const liked=localStorage.getItem(this.keyLiked())==='1';
-    likeBtn.classList.toggle('liked', liked);
-    const count=parseInt(localStorage.getItem(this.keyCount())||'0',10);
-    likeCountEl.textContent=String(count);
+// Likes (shared across browsers) via Supabase.
+// We still use localStorage only to prevent repeated likes from the same browser for the same post.
+const Like = {
+  postId: null,
+  keyLiked() { return `liked_once_v1::${this.postId}`; },
+
+  async getCount() {
+    const { data, error } = await supabase
+      .from("post_likes")
+      .select("likes_count")
+      .eq("slug", this.postId)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data?.likes_count ?? 0;
   },
-  likeOnce(){
-    const liked=localStorage.getItem(this.keyLiked())==='1';
-    if(liked) return;
-    const current=parseInt(localStorage.getItem(this.keyCount())||'0',10);
-    localStorage.setItem(this.keyCount(), String(current+1));
-    localStorage.setItem(this.keyLiked(), '1');
-    this.render();
+
+  async increment() {
+    const { data, error } = await supabase.rpc("increment_like", { p_slug: this.postId });
+    if (error) throw error;
+    return data; // integer (new count)
+  },
+
+  async setPost(id) {
+    this.postId = id;
+    await this.render();
+  },
+
+  async render() {
+    if (!this.postId) return;
+
+    const liked = localStorage.getItem(this.keyLiked()) === "1";
+    likeBtn.classList.toggle("liked", liked);
+
+    try {
+      const count = await this.getCount();
+      likeCountEl.textContent = String(count);
+    } catch (e) {
+      console.warn("Like fetch failed:", e);
+      // Keep UI usable even if fetch fails
+      likeCountEl.textContent = likeCountEl.textContent || "0";
+    }
+  },
+
+  async likeOnce() {
+    if (!this.postId) return;
+
+    const liked = localStorage.getItem(this.keyLiked()) === "1";
+    if (liked) return;
+
+    likeBtn.disabled = true;
+    try {
+      const newCount = await this.increment();
+      likeCountEl.textContent = String(newCount);
+      localStorage.setItem(this.keyLiked(), "1");
+      likeBtn.classList.add("liked");
+    } catch (e) {
+      console.warn("Like increment failed:", e);
+    } finally {
+      likeBtn.disabled = false;
+    }
   }
 };
-likeBtn.addEventListener('click',()=>Like.likeOnce());
+
+likeBtn.addEventListener("click", () => Like.likeOnce());
 
 // Share current hash URL
 const shareBtn=document.getElementById('shareBtn');
