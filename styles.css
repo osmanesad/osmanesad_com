@@ -490,3 +490,111 @@ footer{margin-top:70px;color:var(--muted);font-size:12px;}
   align-items: center;
   padding: 20px 0;
 }
+
+.subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* =========================
+   PRINT / CV MODE
+========================= */
+
+@media print {
+
+  /* Sayfa ayarı */
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Header sadeleşsin */
+  .iconLinks,
+  .toTop,
+  #langToggle,
+  .actions {
+    display: none !important;
+  }
+
+  .divider {
+    margin: 12px 0 !important;
+  }
+
+  /* Daha kompakt metin */
+  .shell {
+    max-width: 100% !important;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-top: 18px;
+    margin-bottom: 6px;
+  }
+
+  h3 {
+    font-size: 14px;
+    margin-top: 14px;
+    margin-bottom: 4px;
+  }
+
+  p, li {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  ul {
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+  }
+
+  /* Linkler URL olarak da görünsün */
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 10px;
+    color: #555;
+  }
+
+  a[href^="mailto:"]::after {
+    content: "";
+  }
+
+}/* About title + language switch */
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.langSwitch {
+  background: none;
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.langSwitch:hover {
+  opacity: 1;
+  border-color: rgba(0,0,0,0.4);
+}

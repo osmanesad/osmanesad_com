@@ -1,109 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="./triquetra.png" type="image/x-icon" />
+
   <title>Osman Esad — Hakkımda</title>
-  <meta name="description" content="Osman Esad Hoşbak — Coffee & Product Builder. CV, deneyim ve iletişim." />
+  <meta name="description" content="Osman Esad Hoşbak — Coffee & Product Builder. Collaboration & freelance profile." />
+
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Only for about page language toggle */
+    .langBlock { display: none; }
+    .langBlock.isActive { display: block; }
+
+    .titleRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .langSwitch {
+      background: none;
+      border: 1px solid rgba(0,0,0,0.25);
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 6px;
+      opacity: 0.7;
+      transition: opacity 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+    .langSwitch:hover { opacity: 1; border-color: rgba(0,0,0,0.4); }
+
+    /* Print (simple & clean) */
+    @media print {
+      .iconLinks, .langSwitch, .toTop { display: none !important; }
+      a { text-decoration: none !important; }
+      .divider { margin: 14px 0 !important; }
+    }
+  </style>
 </head>
+
 <body>
+<main class="shell">
 
-  <main class="shell">
+  <header>
+    <a class="name" href="index.html">Osman Esad</a>
 
-    <header>
-      <a class="name" href="index.html" aria-label="Ana sayfaya dön">Osman Esad</a>
+    <p class="subtitle">
+      Coffee & Product Builder · İstanbul
+    </p>
 
-      <nav class="iconLinks" aria-label="Bağlantılar">
-        <a class="textLink active" href="about.html" aria-current="page">Hakkımda</a>
+    <!-- keep your existing icon bar -->
+    <nav class="iconLinks" aria-label="Links">
+      <a class="textLink active" href="about.html" aria-current="page">
+        <span class="langBlock isActive" data-lang="tr">Hakkımda</span>
+        <span class="langBlock" data-lang="en">About</span>
+      </a>
 
-        <a class="social" href="https://osmanesad.medium.com/" target="_blank" title="Medium" rel="noopener">
-          <img src="assets/icons/medium.svg" alt="Medium">
-        </a>
+      <a class="social" href="https://osmanesad.medium.com/" target="_blank" rel="noopener" title="Medium">
+        <img src="assets/icons/medium.svg" alt="Medium" />
+      </a>
+      <a class="social" href="https://github.com/osmanesad" target="_blank" rel="noopener" title="GitHub">
+        <img src="assets/icons/github.svg" alt="GitHub" />
+      </a>
+      <a class="social" href="https://www.artstation.com/masondase" target="_blank" rel="noopener" title="ArtStation">
+        <img src="assets/icons/artstation.svg" alt="ArtStation" />
+      </a>
+      <a class="social" href="https://www.behance.net/osmanesad" target="_blank" rel="noopener" title="Behance">
+        <img src="assets/icons/behance.svg" alt="Behance" />
+      </a>
+      <a class="social" href="https://www.linkedin.com/in/osmanesad/" target="_blank" rel="noopener" title="LinkedIn">
+        <img src="assets/icons/linkedin.svg" alt="LinkedIn" />
+      </a>
+      <a class="social" href="https://www.instagram.com/masondase/" target="_blank" rel="noopener" title="Instagram">
+        <img src="assets/icons/instagram.svg" alt="Instagram" />
+      </a>
+      <a class="social" href="https://vsco.co/osmanesad/gallery" target="_blank" rel="noopener" title="VSCO">
+        <img src="assets/icons/vsco.svg" alt="VSCO" />
+      </a>
+      <a class="social" href="https://youtube.com/@osmanesad?si=cu8vE3Sx6dMPpb2N" target="_blank" rel="noopener" title="YouTube">
+        <img src="assets/icons/youtube.svg" alt="YouTube" />
+      </a>
+      <a class="social" href="https://www.pinterest.com/g0324d/" target="_blank" rel="noopener" title="Pinterest">
+        <img src="assets/icons/pinterest.svg" alt="Pinterest" />
+      </a>
+    </nav>
+  </header>
 
-        <a class="social" href="https://github.com/osmanesad" target="_blank" title="GitHub" rel="noopener">
-          <img src="assets/icons/github.svg" alt="GitHub">
-        </a>
+  <div class="divider"></div>
 
-        <a class="social" href="https://www.artstation.com/masondase" target="_blank" title="ArtStation" rel="noopener">
-          <img src="assets/icons/artstation.svg" alt="ArtStation">
-        </a>
+  <!-- Title + lang toggle near the content (not in the nav) -->
+  <div class="titleRow">
+    <h1 style="margin:0;">
+      <span class="langBlock isActive" data-lang="tr">Hakkımda</span>
+      <span class="langBlock" data-lang="en">About</span>
+    </h1>
 
-        <a class="social" href="https://www.behance.net/osmanesad" target="_blank" title="Behance" rel="noopener">
-          <img src="assets/icons/behance.svg" alt="Behance">
-        </a>
+    <button id="langToggle" class="langSwitch" type="button" aria-label="Switch language">
+      <span class="langBlock isActive" data-lang="tr">EN</span>
+      <span class="langBlock" data-lang="en">TR</span>
+    </button>
+  </div>
 
-        <a class="social" href="https://www.linkedin.com/in/osmanesad/" target="_blank" title="LinkedIn" rel="noopener">
-          <img src="assets/icons/linkedin.svg" alt="LinkedIn">
-        </a>
+  <article>
 
-        <a class="social" href="https://www.instagram.com/masondase/" target="_blank" title="Instagram" rel="noopener">
-          <img src="assets/icons/instagram.svg" alt="Instagram">
-        </a>
-
-        <a class="social" href="https://vsco.co/osmanesad/gallery" target="_blank" title="VSCO" rel="noopener">
-          <img src="assets/icons/vsco.svg" alt="VSCO">
-        </a>
-
-        <a class="social" href="https://youtube.com/@osmanesad?si=cu8vE3Sx6dMPpb2N" target="_blank" title="YouTube" rel="noopener">
-          <img src="assets/icons/youtube.svg" alt="YouTube">
-        </a>
-
-        <a class="social" href="https://www.pinterest.com/g0324d/" target="_blank" title="Pinterest" rel="noopener">
-          <img src="assets/icons/pinterest.svg" alt="Pinterest">
-        </a>
-      </nav>
-    </header>
-
-    <div class="divider"></div>
-
-    <article>
-      <h1>Hakkımda</h1>
-      <div class="dateLine">Coffee &amp; Product Builder · İstanbul</div>
-
-      <p>
-        Kahve kültürü ile dijital ürün geliştirmeyi bir arada sürdüren; perakende, yazılım ve marka geliştirme
-        alanlarında deneyim sahibi.
-      </p>
-
-      <div class="actions" style="flex-wrap:wrap">
-        <a class="action" href="archive.html" style="text-decoration:none">Arşiv</a>
-        <a class="action" href="mailto:byesad@gmail.com" style="text-decoration:none">E-posta</a>
-        <a class="action" href="https://dasecoffee.co" target="_blank" rel="noopener" style="text-decoration:none">dasecoffee.co</a>
-        <a class="action" href="assets/Osman_Esad_Hosbak_CV.pdf" target="_blank" rel="noopener" style="text-decoration:none">CV (PDF)</a>
+    <!-- ===== TR ===== -->
+    <section class="langBlock isActive" data-lang="tr">
+<p>
+  Kahve kültürü ile dijital ürün geliştirmeyi bir arada sürdürüyorum.
+  Perakende, yazılım ve marka geliştirme alanlarında çalışıyorum.
+</p>
+      <div class="actions" style="flex-wrap: wrap;">
+        <a class="action" href="mailto:byesad@gmail.com" style="text-decoration:none;">E-posta</a>
+        <a class="action" href="https://dasecoffee.co" target="_blank" rel="noopener" style="text-decoration:none;">dasecoffee.co</a>
+        <a class="action" href="assets/Osman_Esad_Hosbak_CV_TR_2026.pdf" target="_blank" rel="noopener" style="text-decoration:none;">CV (PDF)</a>
+        <a class="action" href="#" onclick="window.print(); return false;" style="text-decoration:none;">Yazdır / PDF al</a>
       </div>
 
       <hr />
 
+      <h2>Ne yapıyorum?</h2>
+      <ul>
+        <li>Kahve tarafında: demleme odaklı kültür, servis deneyimi ve mekân kurgusu.</li>
+        <li>Dijital tarafta: ürün geliştirme, prototipleme, içerik ve basit sistemler (ör. bu blog + Supabase).</li>
+        <li>Marka tarafında: isimlendirme, görsel dil, basit ama tutarlı bir kimlik.</li>
+      </ul>
+
+      <hr />
+
+      <h2>İş birliği</h2>
+      <p class="muted">
+        Yeni bir marka/ürün fikri, kahve odaklı bir proje, web & içerik sistemi kurulumu veya “minimal ama doğru” bir
+        online varlık… Ortak zemin bulursak konuşabiliriz.
+      </p>
+
+      <hr />
+
       <h2>Deneyim</h2>
-
-      <p><strong>dase coffee</strong> — Kurucu (2025 – )</p>
       <ul>
-        <li>Marka ve konsept geliştirme</li>
-        <li>İş modeli ve operasyon planlaması</li>
-        <li>Topluluk ve etkinlik kurgusu</li>
-      </ul>
-
-      <p><strong>Minoa Bookstore</strong> — Kasiyer (07.2024 – 03.2025)</p>
-      <ul>
-        <li>Kafe &amp; kitap alanında operasyon ve raporlama</li>
-      </ul>
-
-      <p><strong>Parsa Coffee Roasters</strong> — Barista (2023 – 2024)</p>
-      <p><strong>Espressolab Harbiye</strong> — Barista (05.2023 – 06.2023)</p>
-
-      <p><strong>Pixel Digital Art</strong> — Kurucu Ortak / Uygulama Geliştirici (2014 – 2025)</p>
-      <ul>
-        <li>Mobil uygulama geliştirme (Swift, Flutter, React Native)</li>
-        <li>Ürün geliştirme ve proje yönetimi</li>
-        <li>Veri analizi ve dijital pazarlama</li>
-      </ul>
-
-      <p><strong>Seçkin Kitap Kırtasiye (Aile İşletmesi)</strong> — Pazarlama &amp; Satış (2013 – 2022)</p>
-      <ul>
-        <li>Perakende operasyon, tedarik ve stok yönetimi</li>
-        <li>Satış, müşteri ilişkileri ve saha deneyimi</li>
+        <li><strong>dase coffee</strong> — Kurucu (marka, konsept, ürün/operasyon planı)</li>
+        <li><strong>Minoa Bookstore</strong> — Kafe & kitap tarafında operasyon</li>
+        <li><strong>Parsa Coffee Roasters</strong> — Barista</li>
+        <li><strong>Espressolab Harbiye</strong> — Barista</li>
+        <li><strong>Pixel Digital Art</strong> — Mobil uygulama / ürün geliştirme</li>
+        <li><strong>Seçkin Kitap Kırtasiye</strong> — Perakende satış & saha deneyimi</li>
       </ul>
 
       <hr />
@@ -115,38 +160,124 @@
         <li>Web Tasarım ve Kodlama — Anadolu Üniversitesi</li>
       </ul>
 
-      <hr />
-
-      <h2>Odak alanları</h2>
-      <p class="muted">
-        Girişimcilik · Perakende Yönetimi · Ürün Geliştirme · Mobil Uygulama · Dijital Pazarlama · Veri Analizi ·
-        Kahve Kültürü · Marka Oluşturma
-      </p>
+      <h3 style="margin-top: 14px;">Kahve Eğitimleri</h3>
+      <ul>
+        <li>MSA — Barista Eğitimi</li>
+        <li>USLA — Kahve / Barista Eğitimi</li>
+      </ul>
 
       <hr />
 
       <h2>İletişim</h2>
       <ul>
         <li><a href="mailto:byesad@gmail.com">byesad@gmail.com</a></li>
-        <li><a href="https://dasecoffee.co" target="_blank" rel="noopener">dasecoffee.co</a></li>
       </ul>
-    </article>
+    </section>
 
-    <footer>@masondase - @dasecoffee.co</footer>
-  </main>
+    <!-- ===== EN ===== -->
+    <section class="langBlock" data-lang="en">
+<p>
+  I combine coffee culture with digital product development.
+  I work across retail, software, and brand development.
+</p>
+      <div class="actions" style="flex-wrap: wrap;">
+        <a class="action" href="mailto:byesad@gmail.com" style="text-decoration:none;">Email</a>
+        <a class="action" href="https://dasecoffee.co" target="_blank" rel="noopener" style="text-decoration:none;">dasecoffee.co</a>
+        <a class="action" href="assets/Osman_Esad_Hosbak_CV_EN_2026.pdf" target="_blank" rel="noopener" style="text-decoration:none;">CV (PDF)</a>
+        <a class="action" href="#" onclick="window.print(); return false;" style="text-decoration:none;">Print / Save as PDF</a>
+      </div>
 
-  <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
+      <hr />
 
-  <script>
-    const btn = document.getElementById("toTop");
-    const onScroll = () => {
-      if (window.scrollY > 500) btn.classList.add("show");
-      else btn.classList.remove("show");
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-    onScroll();
-  </script>
+      <h2>What I do</h2>
+      <ul>
+        <li>On coffee: brewing-focused culture, service experience, and space concept.</li>
+        <li>On digital: product building, prototyping, content and simple systems (e.g., this blog + Supabase).</li>
+        <li>On brand: naming, visual language, and a consistent minimal identity.</li>
+      </ul>
+
+      <hr />
+
+      <h2>Collaboration</h2>
+      <p class="muted">
+        Brand/product ideas, coffee-related projects, lightweight web & content systems, or a minimal but strong online presence —
+        if there’s overlap, I’m happy to talk.
+      </p>
+
+      <hr />
+
+      <h2>Experience</h2>
+      <ul>
+        <li><strong>dase coffee</strong> — Founder (brand, concept, product/ops planning)</li>
+        <li><strong>Minoa Bookstore</strong> — Operations in a cafe & bookstore environment</li>
+        <li><strong>Parsa Coffee Roasters</strong> — Barista</li>
+        <li><strong>Espressolab Harbiye</strong> — Barista</li>
+        <li><strong>Pixel Digital Art</strong> — Mobile apps / product development</li>
+        <li><strong>Seçkin Kitap Kırtasiye</strong> — Retail & hands-on field experience</li>
+      </ul>
+
+      <hr />
+
+      <h2>Education</h2>
+      <ul>
+        <li>Management Information Systems — Anadolu University</li>
+        <li>Computer Education — Istanbul Aydın University</li>
+        <li>Web Design & Coding — Anadolu University</li>
+      </ul>
+
+      <h3 style="margin-top: 14px;">Coffee Training</h3>
+      <ul>
+        <li>MSA — Barista Training</li>
+        <li>USLA — Coffee / Barista Training</li>
+      </ul>
+
+      <hr />
+
+      <h2>Contact</h2>
+      <ul>
+        <li><a href="mailto:byesad@gmail.com">byesad@gmail.com</a></li>
+      </ul>
+    </section>
+
+  </article>
+
+  <footer>@masondase · @dasecoffee.co</footer>
+</main>
+
+<script>
+  const toggle = document.getElementById("langToggle");
+
+  function setLang(lang) {
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll(".langBlock").forEach(el => {
+      const elLang = el.getAttribute("data-lang");
+      if (!elLang) return;
+      el.classList.toggle("isActive", elLang === lang);
+    });
+
+    // optional: change title only (keeps it clean)
+    document.title = (lang === "tr") ? "Osman Esad — Hakkımda" : "Osman Esad — About";
+
+    try { localStorage.setItem("about_lang", lang); } catch (_) {}
+  }
+
+  const saved = (() => {
+    try {
+      const v = localStorage.getItem("about_lang");
+      if (v === "tr" || v === "en") return v;
+    } catch (_) {}
+    const navLang = (navigator.language || "").toLowerCase();
+    return navLang.startsWith("tr") ? "tr" : "en";
+  })();
+
+  setLang(saved);
+
+  toggle.addEventListener("click", () => {
+    const next = (document.documentElement.lang === "tr") ? "en" : "tr";
+    setLang(next);
+  });
+</script>
 
 </body>
 </html>
