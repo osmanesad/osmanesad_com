@@ -1,73 +1,66 @@
-# osmanesad.com – Like System with Supabase
+# osmanesad.com
 
-This repository contains the source code for **osmanesad.com**, including a
-simple, global **like system** built with **Supabase** and vanilla JavaScript.
+Source code for **osmanesad.com** — a minimal personal website focused on writing, coffee, and digital projects.
 
-The goal of the like system is:
+The site includes:
 
-- Each visitor can like a post **only once**
-- Like counts are **shared globally**
-- All users see the same total like count for a post
-- No authentication required
-
----
-
-## How the Like System Works
-
-The system is based on **two tables** and **one RPC function** in Supabase.
-
-### 1. Tables
-
-#### `post_likes`
-Stores the total like count per post.
-
-| column       | type    | description                  |
-|--------------|---------|------------------------------|
-| slug         | text    | unique post identifier (PK) |
-| likes_count  | integer | total likes for the post    |
+- Writing system powered by Supabase
+- Archive page with search and timeline
+- Global like system (no authentication)
+- GitHub projects page (auto-fetched via GitHub API)
+- Minimal mobile drawer navigation
+- Theme + typography controls
 
 ---
 
-#### `post_like_events`
-Stores individual like events to prevent multiple likes
-from the same visitor.
+## Stack
 
-| column      | type        | description                              |
-|-------------|-------------|------------------------------------------|
-| slug        | text        | post identifier                          |
-| visitor_id | text        | unique visitor id (per browser)          |
-| created_at | timestamptz | timestamp                                |
-
-Primary key: `(slug, visitor_id)`
+- Vanilla JavaScript (ES modules)
+- Supabase (database + RPC)
+- GitHub REST API (projects page)
+- Static HTML + CSS
 
 ---
 
-## Visitor Identification
+## Features
 
-Each browser gets a unique `visitor_id` stored in `localStorage`.
+### Writing System
+Posts are stored in Supabase and rendered dynamically.  
+Includes archive view, search, and random post selection.
 
----
+### Global Like System
+Each visitor can like a post once (per browser).  
+Like counts are shared globally using:
 
-## Atomic Like Function (RPC)
+- `post_likes`
+- `post_like_events`
+- RPC function for atomic updates
 
-Likes are handled through a Supabase RPC function to avoid race conditions and
-ensure data consistency.
+### Projects Page
+Fetches public repositories directly from GitHub and lists them
+sorted by latest update.
 
 ---
 
 ## Local Development
 
-Use a local server:
+You can run the project locally in two ways:
 
+### 1. Python Simple Server
 ```bash
 python3 -m http.server 5500
 ```
+Then open:
+```
+http://localhost:5500
+```
 
----
+### 2. VS Code – Live Server Extension
+1. Install the **Live Server** extension in VS Code.
+2. Right-click `index.html`
+3. Click **"Open with Live Server"**
 
-## License
-
-MIT
+This is the preferred way for quick testing during development.
 
 ---
 
