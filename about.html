@@ -50,17 +50,19 @@
 
   <header>
     <a class="name" href="index.html">Osman Esad</a>
+     
 
     <p class="subtitle">
-      Coffee & Product Builder · İstanbul
-    </p>
-
-    <!-- keep your existing icon bar -->
-    <nav class="iconLinks" aria-label="Links">
-      <a class="textLink active" href="about.html" aria-current="page">
+      Coffee · Writing · Code
+    
+    <!-- keep your existing icon bar
+    <a class="textLink active" href="about.html" aria-current="page">
         <span class="langBlock isActive" data-lang="tr">Hakkımda</span>
         <span class="langBlock" data-lang="en">About</span>
-      </a>
+      </a> 
+    -->
+    <nav class="iconLinks" aria-label="Links">
+   
 
       <a class="social" href="https://osmanesad.medium.com/" target="_blank" rel="noopener" title="Medium">
         <img src="assets/icons/medium.svg" alt="Medium" />
@@ -89,6 +91,7 @@
       <a class="social" href="https://www.pinterest.com/g0324d/" target="_blank" rel="noopener" title="Pinterest">
         <img src="assets/icons/pinterest.svg" alt="Pinterest" />
       </a>
+      
     </nav>
   </header>
 
@@ -113,7 +116,12 @@
     <section class="langBlock isActive" data-lang="tr">
 <p>
   Kahve kültürü ile dijital ürün geliştirmeyi bir arada sürdürüyorum.
-  Perakende, yazılım ve marka geliştirme alanlarında çalışıyorum.
+  Yazıyor, yazılım geliştiriyor ve markalar üzerine çalışıyorum.
+</p>
+
+<p>
+  İlgi alanlarım kahve, ürün, yazı ve sade sistemler etrafında kesişiyor.
+  Bu site, bu kesişimlerin bir arşivi.
 </p>
       <div class="actions" style="flex-wrap: wrap;">
         <a class="action" href="mailto:byesad@gmail.com" style="text-decoration:none;">E-posta</a>
@@ -177,8 +185,13 @@
     <!-- ===== EN ===== -->
     <section class="langBlock" data-lang="en">
 <p>
-  I combine coffee culture with digital product development.
-  I work across retail, software, and brand development.
+  I work at the intersection of coffee culture and digital product development.
+  I write, build software, and work on brands.
+</p>
+
+<p>
+  My interests sit around coffee, products, writing, and simple systems.
+  This site is an archive of those intersections.
 </p>
       <div class="actions" style="flex-wrap: wrap;">
         <a class="action" href="mailto:byesad@gmail.com" style="text-decoration:none;">Email</a>
@@ -241,7 +254,20 @@
 
   </article>
 
+  <div class="drawerBackdrop" id="drawerBackdrop" hidden></div>
+
+<aside class="drawer" id="drawer" aria-label="Menü" hidden>
+  <div class="drawerTop">
+    <div class="drawerTitle"><b>Menü</b></div>
+    <button class="drawerClose" id="closeDrawer" aria-label="Kapat">✕</button>
+  </div>
+
+  
+</aside>
+
   <footer>@masondase · @dasecoffee.co</footer>
+
+  
 </main>
 
 <script>

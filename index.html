@@ -14,11 +14,11 @@
           >Osman Esad</a
         >
         <p class="subtitle">
-          Coffee & Product Builder · İstanbul
+          Coffee · Writing · Code
         </p>
 
         <nav class="iconLinks" aria-label="Bağlantılar">
-           <a class="textLink" href="about.html">Hakkımda</a>
+          
           <a
             class="social"
             href="https://osmanesad.medium.com/"
@@ -112,7 +112,7 @@
         </nav>
 
         <button class="mobileMenuBtn" id="openPosts" aria-label="Yazıları aç">
-          ≡Yazılar
+          ≡
         </button>
       </header>
 
@@ -239,36 +239,34 @@
 
         <aside aria-label="Yazılar">
           <div class="asideHeader">
-            <div class="asideTitle"><b>Yazılar</b></div>
-            <div class="asideActions">
-              <button
-                class="asideBtn"
-                id="randomBtn"
-                title="Rastgele bir yazı aç"
-              >
-                Rastgele
-              </button>
-              <a class="asideBtn" href="archive.html" title="Tümü / Arşiv"
-                >Arşiv</a
-              >
-            </div>
-          </div>
-          <ul class="postList" id="postList"></ul>
+  <div class="asideTitle"><b>Yazılar</b></div>
+  <div class="asideActions">
+    <a class="asideBtn" href="projects.html" title="Kodlar">Kodlar</a>
+    <a class="asideBtn" href="archive.html" title="Tümü / Arşiv">Arşiv</a>
+    <a class="asideBtn" href="about.html" title="Hakkımda">Hakkımda</a>
+     <button class="asideBtn" id="randomBtn" title="Rastgele bir yazı aç">Rastgele</button>
+  </div>
+</div>
+<ul class="postList" id="postList"></ul>
         </aside>
       </div>
     </main>
     <div class="drawerBackdrop" id="drawerBackdrop" hidden></div>
 
-    <aside class="drawer" id="drawer" aria-label="Yazılar menüsü" hidden>
-      <div class="drawerTop">
-        <div class="drawerTitle"><b>Yazılar</b></div>
-        <button class="drawerClose" id="closeDrawer" aria-label="Kapat">
-          ✕
-        </button>
-      </div>
-      <ul class="drawerList" id="drawerList"></ul>
-      <a class="drawerArchive" href="archive.html">Arşiv →</a>
-    </aside>
+    <aside class="drawer" id="drawer" aria-label="Menü" hidden>
+  <div class="drawerTop">
+    <div class="drawerTitle"><b> Menü</b></div>
+    <button class="drawerClose" id="closeDrawer" aria-label="Kapat">✕</button>
+  </div>
+
+  <nav class="drawerQuick" aria-label="Hızlı menü">
+    <a class="drawerArchive" href="projects.html">Kodlar →</a>
+     <a class="drawerArchive" href="archive.html">Arşiv →</a>
+    <a class="drawerArchive" href="about.html">Hakkımda →</a>
+   
+    <button class="drawerArchive" id="randomBtnMobile" type="button">Rastgele →</button>
+  </nav>
+</aside>
 
     <script type="module" src="app.js"></script>
 
