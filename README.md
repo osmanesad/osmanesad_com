@@ -1,68 +1,110 @@
 # osmanesad.com
 
-Source code for **osmanesad.com** — a minimal personal website focused on writing, coffee, and digital projects.
+Personal website source for `osmanesad.com`.
 
-The site includes:
+The site is a static front-end that pulls:
 
-- Writing system powered by Supabase
-- Archive page with search and timeline
-- Global like system (no authentication)
-- GitHub projects page (auto-fetched via GitHub API)
-- Minimal mobile drawer navigation
-- Theme + typography controls
+- writings from Supabase
+- public repositories from the GitHub API
+- static profile content from local HTML files
 
----
+## Pages
+
+- `index.html`: landing page and writing reader
+- `archive.html`: writing archive with search and year navigation
+- `projects.html`: public GitHub repositories
+- `about.html`: profile, contact, and CV links
 
 ## Stack
 
-- Vanilla JavaScript (ES modules)
-- Supabase (database + RPC)
-- GitHub REST API (projects page)
-- Static HTML + CSS
+- HTML
+- CSS
+- Vanilla JavaScript with ES modules
+- Supabase
+- GitHub REST API
 
----
+## Project structure
 
-## Features
+```text
+.
+|-- about.html
+|-- archive.html
+|-- archive.js
+|-- app.js
+|-- assets/
+|   |-- icons/
+|   `-- *.pdf
+|-- index.html
+|-- posts/
+|-- posts.json
+|-- projects.html
+|-- projects.js
+|-- styles.css
+`-- version.txt
+```
 
-### Writing System
-Posts are stored in Supabase and rendered dynamically.  
-Includes archive view, search, and random post selection.
+## Local preview
 
-### Global Like System
-Each visitor can like a post once (per browser).  
-Like counts are shared globally using:
+Use any static server. Two simple options:
 
-- `post_likes`
-- `post_like_events`
-- RPC function for atomic updates
+### Python
 
-### Projects Page
-Fetches public repositories directly from GitHub and lists them
-sorted by latest update.
-
----
-
-## Local Development
-
-You can run the project locally in two ways:
-
-### 1. Python Simple Server
 ```bash
-python3 -m http.server 5500
+python -m http.server 5500
 ```
-Then open:
-```
+
+### VS Code Live Server
+
+Open `index.html` with the Live Server extension.
+
+Then visit:
+
+```text
 http://localhost:5500
 ```
 
-### 2. VS Code – Live Server Extension
-1. Install the **Live Server** extension in VS Code.
-2. Right-click `index.html`
-3. Click **"Open with Live Server"**
+## Data dependencies
 
-This is the preferred way for quick testing during development.
+### Supabase
 
----
+The writing system expects a `posts` table with published rows that include:
+
+- `id`
+- `title`
+- `date`
+- `content_html`
+- `status`
+
+Older like-related structures may still exist in Supabase, but the homepage and archive now focus on reading and navigation.
+
+### GitHub
+
+`projects.js` reads public repositories from:
+
+```text
+https://api.github.com/users/osmanesad/repos
+```
+
+No build step is required.
+
+## Editing notes
+
+- Shared visual language lives mostly in `styles.css`
+- Landing and reader behavior live in `app.js`
+- Archive behavior lives in `archive.js`
+- Projects behavior lives in `projects.js`
+- The site uses a soft gray / muted accent palette and shared navigation across all main pages
+- Reader font-size controls exist only in the writing reader area on `index.html#post-id`
+
+## Quick maintenance checklist
+
+1. Check `version.txt` when shipping a visible update.
+2. Verify Supabase content loads on `index.html` and `archive.html`.
+3. Verify GitHub API output on `projects.html`.
+4. Confirm navigation between `index.html`, `about.html`, `archive.html`, and `projects.html`.
+5. Check mobile layout around `390px` width on all main pages.
+6. Check reader mode by opening a page like `index.html#post-id`.
+7. Confirm reader font-size controls still work in the article view.
 
 ## Author
 

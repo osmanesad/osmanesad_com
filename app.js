@@ -4,116 +4,61 @@ const SUPABASE_URL = 'https://zefzcmrsdvtbliguqedi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Sidebar\'da gösterilecek maksimum yazı sayısı
-const TOP_N = 9;
+const MAX_POSTS = 6;
 
-function getVisitorId() {
-  const key = 'visitor_id_v1';
-  let id = localStorage.getItem(key);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(key, id);
-  }
-  return id;
-}
+const homeHero = document.querySelector('.homeHero');
+const quickGrid = document.querySelector('.quickGrid');
+const homeContent = document.querySelector('.homeContent');
+const readerShell = document.getElementById('readerShell');
+const readerTitle = document.getElementById('readerTitle');
+const readerDate = document.getElementById('readerDate');
+const readerContent = document.getElementById('readerContent');
+const readerPostList = document.getElementById('readerPostList');
+const readerFontDown = document.getElementById('readerFontDown');
+const readerFontUp = document.getElementById('readerFontUp');
+const readerFontReset = document.getElementById('readerFontReset');
+const featuredEntry = document.getElementById('featuredEntry');
+const featuredDate = document.getElementById('featuredDate');
+const featuredTitle = document.getElementById('featuredTitle');
+const featuredExcerpt = document.getElementById('featuredExcerpt');
+const latestPosts = document.getElementById('latestPosts');
+const randomEntryBtn = document.getElementById('randomEntry');
+const buildBadge = document.getElementById('buildBadge');
+const toTopBtn = document.getElementById('toTop');
 
-// Theme + font size
-const THEMES = {
-  white: {
-    bg: '#ffffff',
-    text: '#111111',
-    muted: '#5d2424',
-    line: '#e7e7e7',
-    chip: '#f4f4f4',
-    chipText: '#111',
-    shadow: 'rgba(0,0,0,0.04)'
-  },
-  sepia: {
-    bg: '#f6f1e5',
-    text: '#1a1a1a',
-    muted: '#6b5f55',
-    line: '#e7ddcf',
-    chip: '#efe6d7',
-    chipText: '#1a1a1a',
-    shadow: 'rgba(0,0,0,0.04)'
-  },
-  gray: {
-    bg: '#f1f1f1',
-    text: '#111111',
-    muted: '#6b6b6b',
-    line: '#dedede',
-    chip: '#e9e9e9',
-    chipText: '#111',
-    shadow: 'rgba(0,0,0,0.04)'
-  },
-  dark: {
-    bg: '#0e0f12',
-    text: '#f3f4f6',
-    muted: '#a1a1aa',
-    line: '#22242a',
-    chip: '#17181d',
-    chipText: '#f3f4f6',
-    shadow: 'rgba(0,0,0,0.25)'
-  }
-};
+let posts = [];
 const root = document.documentElement;
+const READER_FONT_KEY = 'reader_font_size';
+const READER_FONT_MIN = 17;
+const READER_FONT_MAX = 23;
 
-function applyTheme(name) {
-  const t = THEMES[name] || THEMES.white;
-  root.style.setProperty('--bg', t.bg);
-  root.style.setProperty('--text', t.text);
-  root.style.setProperty('--muted', t.muted);
-  root.style.setProperty('--line', t.line);
-  root.style.setProperty('--chip', t.chip);
-  root.style.setProperty('--chipText', t.chipText);
-  root.style.setProperty('--shadow', t.shadow);
-
-  document
-    .querySelectorAll('.dot')
-    .forEach((d) => d.setAttribute('aria-pressed', 'false'));
-  const idMap = { white: 't-white', sepia: 't-sepia', gray: 't-gray', dark: 't-dark' };
-  const btn = document.getElementById(idMap[name]);
-  if (btn) btn.setAttribute('aria-pressed', 'true');
-
-  localStorage.setItem('read_theme', name);
+function setReaderFontSize(size) {
+  const clamped = Math.max(READER_FONT_MIN, Math.min(READER_FONT_MAX, size));
+  root.style.setProperty('--readerFontSize', `${clamped}px`);
+  try {
+    localStorage.setItem(READER_FONT_KEY, String(clamped));
+  } catch (_) {}
 }
 
-const MIN = 16,
-  MAX = 22;
-function setFontSize(px) {
-  const clamped = Math.max(MIN, Math.min(MAX, px));
-  root.style.setProperty('--fontSize', clamped + 'px');
-  localStorage.setItem('read_font', String(clamped));
+function initReaderFontSize() {
+  try {
+    const saved = parseInt(localStorage.getItem(READER_FONT_KEY) || '19', 10);
+    setReaderFontSize(Number.isNaN(saved) ? 19 : saved);
+  } catch (_) {
+    setReaderFontSize(19);
+  }
 }
 
-document.getElementById('decrease').addEventListener('click', () => {
-  const current = parseInt(getComputedStyle(root).getPropertyValue('--fontSize')) || 18;
-  setFontSize(current - 1);
-});
-document.getElementById('increase').addEventListener('click', () => {
-  const current = parseInt(getComputedStyle(root).getPropertyValue('--fontSize')) || 18;
-  setFontSize(current + 1);
-});
-
-document.getElementById('t-white').addEventListener('click', () => applyTheme('white'));
-document.getElementById('t-sepia').addEventListener('click', () => applyTheme('sepia'));
-document.getElementById('t-gray').addEventListener('click', () => applyTheme('gray'));
-document.getElementById('t-dark').addEventListener('click', () => applyTheme('dark'));
-
-applyTheme(localStorage.getItem('read_theme') || 'white');
-setFontSize(parseInt(localStorage.getItem('read_font') || '18', 10));
-
-// DOM
-const postListEl = document.getElementById('postList');
-const titleEl = document.getElementById('title');
-const dateEl = document.getElementById('dateLine');
-const contentEl = document.getElementById('content');
+function currentPostId() {
+  return window.location.hash.replace('#', '').trim();
+}
 
 function fmtDate(iso) {
   if (!iso) return '';
+
   try {
-    const d = new Date(iso + 'T00:00:00');
-    return d.toLocaleDateString('tr-TR', {
+    const date = new Date(`${iso}T00:00:00`);
+    return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -123,216 +68,219 @@ function fmtDate(iso) {
   }
 }
 
-// Like per post (local)
-const likeBtn = document.getElementById('likeBtn');
-const likeCountEl = document.getElementById('likeCount');
-const Like = {
-  postId: null,
-  keyLiked() {
-    return `liked_once_v1::${this.postId}`;
-  },
-
-  async fetchCount() {
-    const { data, error } = await supabase
-      .from('post_likes')
-      .select('likes_count')
-      .eq('slug', this.postId)
-      .maybeSingle();
-    if (error) throw error;
-    return data?.likes_count ?? 0;
-  },
-
-  async render() {
-    const liked = localStorage.getItem(this.keyLiked()) === '1';
-    likeBtn.classList.toggle('liked', liked);
-
-    try {
-      const count = await this.fetchCount();
-      likeCountEl.textContent = String(count);
-    } catch (e) {
-      console.warn('Like fetch failed:', e);
-      // fallback (keeps UI stable if network fails)
-      likeCountEl.textContent = likeCountEl.textContent || '0';
-    }
-  },
-
-  setPost(id) {
-    this.postId = id;
-    this.render();
-  },
-
-  async likeOnce() {
-    const liked = localStorage.getItem(this.keyLiked()) === '1';
-    if (liked) return;
-
-    try {
-      const { data, error } = await supabase.rpc('like_once', {
-        p_slug: this.postId,
-        p_visitor_id: getVisitorId()
-      });
-      if (error) throw error;
-      likeCountEl.textContent = String(data);
-      localStorage.setItem(this.keyLiked(), '1');
-      likeBtn.classList.add('liked');
-    } catch (e) {
-      console.warn('Like failed:', e);
-    }
-  }
-};
-likeBtn.addEventListener('click', () => Like.likeOnce());
-
-// Share current hash URL
-const shareBtn = document.getElementById('shareBtn');
-shareBtn.addEventListener('click', async () => {
-  const url = window.location.href;
-  const title = document.title + ' — ' + (titleEl.textContent || 'Yazı');
-  try {
-    if (navigator.share) {
-      await navigator.share({ title, url });
-    } else {
-      await navigator.clipboard.writeText(url);
-      const original = shareBtn.innerHTML;
-      shareBtn.textContent = 'Kopyalandı';
-      setTimeout(() => {
-        shareBtn.innerHTML = original;
-      }, 900);
-    }
-  } catch (e) {}
-});
-
-// Data
-let POSTS = [];
-
-function renderSidebar(activeId) {
-  postListEl.innerHTML = '';
-  const top = POSTS.slice(0, TOP_N);
-  top.forEach((p) => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.className = 'postLink';
-    a.href = '#' + p.id;
-    a.setAttribute('aria-current', p.id === activeId ? 'true' : 'false');
-    a.innerHTML = `<div>${p.title}</div><span class="postMeta">${fmtDate(p.date)}</span>`;
-    li.appendChild(a);
-    postListEl.appendChild(li);
-  });
-
-  const li = document.createElement('li');
-  const a = document.createElement('a');
-  a.className = 'postLink';
-  a.href = 'archive.html';
-  a.innerHTML = `<div>→ Tümü / Arşiv</div><span class="postMeta">${POSTS.length} yazı</span>`;
-  li.appendChild(a);
-  postListEl.appendChild(li);
+function stripHtml(html) {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
 }
 
-function setActivePost(id) {
-  const p = POSTS.find((x) => x.id === id) || POSTS[0];
-  if (!p) {
-    titleEl.textContent = 'Yazı bulunamadı';
-    contentEl.innerHTML = '';
+function excerptFrom(html) {
+  const plain = stripHtml(html);
+  if (!plain) return 'Detaylı okumak için arşive geç.';
+  return plain.length > 150 ? `${plain.slice(0, 147)}...` : plain;
+}
+
+function entryHref(post) {
+  return `index.html#${post.id}`;
+}
+
+function scrollReaderIntoView(behavior = 'smooth') {
+  if (!readerShell) return;
+  readerShell.scrollIntoView({ behavior, block: 'start' });
+}
+
+function renderFeatured(post) {
+  if (!post) {
+    featuredTitle.textContent = 'Henüz yazı yok';
+    featuredDate.textContent = '';
+    featuredExcerpt.textContent = 'Yeni içerikler eklendiğinde burada gösterilecek.';
+    featuredEntry.href = 'archive.html';
     return;
   }
-  titleEl.textContent = p.title;
-  dateEl.textContent = fmtDate(p.date);
-  contentEl.innerHTML = p.content || '';
-  Like.setPost(p.id);
-  renderSidebar(p.id);
-  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  featuredEntry.href = entryHref(post);
+  featuredDate.textContent = fmtDate(post.date);
+  featuredTitle.textContent = post.title;
+  featuredExcerpt.textContent = excerptFrom(post.content_html);
 }
 
-async function load() {
-  // Supabase'ten sadece yayındaki (published) yazıları çek
+function renderList(items) {
+  latestPosts.innerHTML = '';
+
+  if (!items.length) {
+    const empty = document.createElement('p');
+    empty.className = 'homeEmpty';
+    empty.textContent = 'Gösterilecek yazı bulunamadı.';
+    latestPosts.appendChild(empty);
+    return;
+  }
+
+  items.forEach((post) => {
+    const li = document.createElement('li');
+    li.className = 'homeListItem';
+
+    const a = document.createElement('a');
+    a.href = entryHref(post);
+    a.innerHTML = `
+      <span class="homeListTitle">${post.title}</span>
+      <span class="homeListDate">${fmtDate(post.date)}</span>
+    `;
+
+    li.appendChild(a);
+    latestPosts.appendChild(li);
+  });
+}
+
+function toggleView(isReader) {
+  if (homeHero) homeHero.hidden = isReader;
+  if (quickGrid) quickGrid.hidden = isReader;
+  if (homeContent) homeContent.hidden = isReader;
+  if (readerShell) readerShell.hidden = !isReader;
+}
+
+function renderReaderList(activeId) {
+  readerPostList.innerHTML = '';
+
+  posts
+    .filter((post) => post.id !== activeId)
+    .slice(0, MAX_POSTS)
+    .forEach((post) => {
+      const li = document.createElement('li');
+      li.className = 'homeListItem';
+
+      const a = document.createElement('a');
+      a.href = entryHref(post);
+      a.innerHTML = `
+        <span class="homeListTitle">${post.title}</span>
+        <span class="homeListDate">${fmtDate(post.date)}</span>
+      `;
+
+      li.appendChild(a);
+      readerPostList.appendChild(li);
+    });
+}
+
+function renderReader(postId, options = {}) {
+  const { scrollBehavior = 'auto' } = options;
+  const post = posts.find((item) => item.id === postId);
+
+  if (!post) {
+    readerTitle.textContent = 'Yazı bulunamadı';
+    readerDate.textContent = '';
+    readerContent.innerHTML = '<p>İstenen yazı bulunamadı. Arşivden başka bir yazı açabilirsin.</p>';
+    readerPostList.innerHTML = '';
+    toggleView(true);
+    scrollReaderIntoView(scrollBehavior);
+    return;
+  }
+
+  readerTitle.textContent = post.title;
+  readerDate.textContent = fmtDate(post.date);
+  readerContent.innerHTML = post.content_html || '<p>Bu yazı için içerik bulunamadı.</p>';
+  renderReaderList(post.id);
+  toggleView(true);
+  scrollReaderIntoView(scrollBehavior);
+}
+
+function renderHome() {
+  renderFeatured(posts[0]);
+  renderList(posts.slice(1, MAX_POSTS + 1));
+  toggleView(false);
+}
+
+function syncView() {
+  const postId = currentPostId();
+  if (postId) {
+    renderReader(postId, { scrollBehavior: 'auto' });
+    return;
+  }
+
+  renderHome();
+}
+
+async function loadPosts() {
   const { data, error } = await supabase
     .from('posts')
-    .select('id,title,date,type,content_html,status')
+    .select('id,title,date,content_html,status')
     .eq('status', 'published')
     .order('date', { ascending: false });
 
   if (error) throw error;
 
-  POSTS = (data || []).map((p) => ({
-    id: p.id,
-    title: p.title,
-    date: p.date,
-    type: p.type,
-    content: p.content_html
-  }));
-
-  const id = location.hash.replace('#', '').trim() || (POSTS[0] && POSTS[0].id);
-  renderSidebar(id);
-  setActivePost(id);
+  posts = data || [];
+  syncView();
 }
 
-window.addEventListener('hashchange', () =>
-  setActivePost(location.hash.replace('#', '').trim())
-);
+if (randomEntryBtn) {
+  randomEntryBtn.addEventListener('click', () => {
+    if (!posts.length) {
+      window.location.href = 'archive.html';
+      return;
+    }
 
-document.getElementById('randomBtn').addEventListener('click', () => {
-  if (!POSTS.length) return;
-  const pick = POSTS[Math.floor(Math.random() * POSTS.length)];
-  location.hash = pick.id;
+    const pick = posts[Math.floor(Math.random() * posts.length)];
+    window.location.href = entryHref(pick);
+  });
+}
+
+if (readerFontDown) {
+  readerFontDown.addEventListener('click', () => {
+    const current = parseInt(getComputedStyle(root).getPropertyValue('--readerFontSize'), 10) || 19;
+    setReaderFontSize(current - 1);
+  });
+}
+
+if (readerFontUp) {
+  readerFontUp.addEventListener('click', () => {
+    const current = parseInt(getComputedStyle(root).getPropertyValue('--readerFontSize'), 10) || 19;
+    setReaderFontSize(current + 1);
+  });
+}
+
+if (readerFontReset) {
+  readerFontReset.addEventListener('click', () => {
+    setReaderFontSize(19);
+  });
+}
+
+window.addEventListener('hashchange', () => {
+  const postId = currentPostId();
+  if (postId) {
+    renderReader(postId, { scrollBehavior: 'smooth' });
+    return;
+  }
+
+  renderHome();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-load().catch((err) => {
-  titleEl.textContent = 'Yükleme hatası';
-  contentEl.innerHTML = '<p>Yazılar yüklenemedi. Lütfen tekrar deneyin.</p>';
-  console.error(err);
-});
-
-// --- Scroll to top (Index) ---
-const toTopBtn = document.getElementById('toTop');
 if (toTopBtn) {
-  const toggle = () => {
+  const toggleToTop = () => {
     toTopBtn.classList.toggle('show', window.scrollY > 500);
   };
-  window.addEventListener('scroll', toggle, { passive: true });
-  toggle();
+
+  window.addEventListener('scroll', toggleToTop, { passive: true });
+  toggleToTop();
 
   toTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
 
-// --- Mobile drawer: quick menu ---
-const openPostsBtn = document.getElementById('openPosts');
-const drawer = document.getElementById('drawer');
-const drawerBackdrop = document.getElementById('drawerBackdrop');
-const closeDrawerBtn = document.getElementById('closeDrawer');
-const randomBtnMobile = document.getElementById('randomBtnMobile');
-
-function openDrawer() {
-  if (!drawer || !drawerBackdrop) return;
-  drawer.hidden = false;
-  drawerBackdrop.hidden = false;
-  document.body.style.overflow = 'hidden';
-}
-
-function closeDrawer() {
-  if (!drawer || !drawerBackdrop) return;
-  drawer.hidden = true;
-  drawerBackdrop.hidden = true;
-  document.body.style.overflow = '';
-}
-
-if (openPostsBtn) openPostsBtn.addEventListener('click', openDrawer);
-if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
-if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeDrawer();
-});
-
-// Mobil menüde "Rastgele"
-if (randomBtnMobile) {
-  randomBtnMobile.addEventListener('click', () => {
-    if (!POSTS.length) return;
-    const pick = POSTS[Math.floor(Math.random() * POSTS.length)];
-    location.hash = pick.id;
-    closeDrawer();
-  });
-}
-
 fetch('/version.txt')
-  .then((r) => r.text())
-  .then((t) => (document.getElementById('betaBadge').textContent = t.trim()))
+  .then((response) => response.text())
+  .then((text) => {
+    buildBadge.hidden = false;
+    buildBadge.textContent = text.trim();
+  })
   .catch(() => {});
+
+initReaderFontSize();
+
+loadPosts().catch((error) => {
+  renderFeatured(null);
+  renderList([]);
+  toggleView(false);
+  console.error(error);
+});

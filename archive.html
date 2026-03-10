@@ -3,33 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Osman Esad — Arşiv</title>
+  <link rel="icon" href="./triquetra.png" type="image/x-icon" />
+  <title>Osman Esad - Arşiv</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="shell shell-archive">
-    <header class="archiveHeader">
-      <div>
-        <h1 class="archiveTitle">Arşiv</h1>
-        <div class="archiveMeta" id="countLine">Yükleniyor…</div>
+  <main class="shell subpageShell shell-archive">
+    <header class="siteBar">
+      <div class="siteBarBrand">
+        <a class="name" href="index.html">Osman Esad</a>
+        <p class="subtitle">Coffee · Writing · Code</p>
       </div>
-      <div class="archiveTopbar">
-        <a class="asideBtn" href="index.html">← Okumaya dön</a>
-      </div>
+
+      <nav class="siteBarNav" aria-label="Site bölümleri">
+        <a class="sitePill" href="index.html">Ana sayfa</a>
+        <a class="sitePill" href="projects.html">Kodlar</a>
+        <a class="sitePill" href="about.html">Hakkımda</a>
+        <a class="sitePill" href="archive.html" aria-current="page">Arşiv</a>
+      </nav>
     </header>
 
-    <nav class="timeline" id="timeline" aria-label="Zaman çizelgesi"></nav>
+    <section class="sectionHero">
+      <div class="sectionHeroCard">
+        <span class="homeEyebrow">Yazılar</span>
+        <h1>Arşiv</h1>
+        <p class="sectionHeroLead">
+          Burada tüm yazılar bir arada duruyor. İstersen tarihe göre gezebilir,
+          istersen başlıktan arayıp doğrudan ilgini çeken metne geçebilirsin.
+        </p>
+        <div class="sectionHeroActions">
+          <a class="sitePill" href="index.html">Ana sayfaya dön</a>
+          <a class="sitePill" href="about.html">Hakkımda</a>
+        </div>
+      </div>
+    </section>
 
-    <div class="archiveControls">
-      <input id="q" class="archiveSearch" type="search" placeholder="Başlık içinde ara…" />
-      <button class="asideBtn" id="clear">Temizle</button>
+    <div class="panelBlock">
+      <div class="archiveHeader">
+        <div class="archiveMeta" id="countLine">Yükleniyor...</div>
+      </div>
+
+      <nav class="timeline" id="timeline" aria-label="Zaman çizelgesi"></nav>
+
+      <div class="archiveControls">
+        <input id="q" class="archiveSearch" type="search" placeholder="Başlık içinde ara..." />
+        <button class="asideBtn" id="clear">Temizle</button>
+      </div>
+
+      <ul class="archiveList2" id="list"></ul>
     </div>
-
-    <ul class="archiveList2" id="list"></ul>
   </main>
 
   <script type="module" src="archive.js"></script>
   <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
-
 </body>
 </html>
