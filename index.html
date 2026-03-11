@@ -7,7 +7,22 @@
     <title>Osman Esad - Ana Sayfa</title>
     <meta
       name="description"
-      content="Osman Esad'in yazı, kod, arşiv ve hakkımda bölümlerine açılan karşılama sayfası."
+      content="Osman Esad’in yazı, kod, arşiv ve hakkında bölümlerine açılan karşılama sayfası."
+    />
+    <link rel="canonical" href="https://osmanesad.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Osman Esad" />
+    <meta property="og:title" content="Osman Esad - Ana Sayfa" />
+    <meta
+      property="og:description"
+      content="Osman Esad’in yazı, kod, arşiv ve hakkında bölümlerine açılan karşılama sayfası."
+    />
+    <meta property="og:url" content="https://osmanesad.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Osman Esad - Ana Sayfa" />
+    <meta
+      name="twitter:description"
+      content="Osman Esad’in yazı, kod, arşiv ve hakkında bölümlerine açılan karşılama sayfası."
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -106,11 +121,15 @@
 
       <section class="homeHero">
         <div class="heroCopy">
+          <div class="heroBackdrop" aria-hidden="true">
+            <span class="heroBackdropMark heroBackdropMark-grid"></span>
+            <span class="heroBackdropMark heroBackdropMark-orbit"></span>
+          </div>
           <span class="homeEyebrow">Karşılama</span>
           <h1 class="homeTitle">Yazılar, projeler ve arşiv için sade bir giriş.</h1>
           <p class="homeLead">
-            Hoş geldin. Burada uzun bir metinle başlamak yerine, seni ilgini çeken
-            bölüme daha rahat geçebileceğin sakin bir giriş hazırladım.
+            Hoş geldin. Burada uzun bir metinle başlamak yerine, seni ilgini çeken bölüme
+            daha rahat geçebileceğin sakin bir giriş hazırladım.
           </p>
 
           <div class="homeActions">
@@ -119,38 +138,70 @@
               Rastgele bir yazı aç
             </button>
           </div>
+
+          <div class="heroFragments" aria-hidden="true">
+            <div class="heroFragment heroFragment-code">
+              <span>const mood = 'soft';</span>
+              <span>notes.map((idea) =&gt; idea.keep());</span>
+            </div>
+            <div class="heroFragment heroFragment-sketch">
+              <span>◌ notlar</span>
+              <span>◌ çizimler</span>
+              <span>◌ prototipler</span>
+            </div>
+          </div>
         </div>
 
         <aside class="homeIntroCard" aria-label="Kısa bilgi">
-          <span class="introLabel">Kısa not</span>
-          <p>
-            Kahve, dijital üretim, yazma ve sade sistemler etrafında düşünüyor ve
-            çalışıyorum. Biraz daha yakından tanışmak istersen
-            <a href="about.html">Hakkımda</a> sayfasına geçebilirsin.
-          </p>
+          <div class="introCardVisual" aria-hidden="true">
+            <div class="introSketch introSketch-circle"></div>
+            <div class="introSketch introSketch-line"></div>
+            <div class="introCode">
+              <span>brew();</span>
+              <span>write();</span>
+              <span>build();</span>
+            </div>
+          </div>
+          <div class="introCardContent">
+            <span class="introLabel">Kısa not</span>
+            <p>
+              Kahve, dijital üretim, yazma ve sade sistemler etrafında düşünüyor ve
+              çalışıyorum. Biraz daha yakından tanışmak istersen
+              <a href="about.html">Hakkımda</a> sayfasına geçebilirsin.
+            </p>
+            <div class="introMiniList" aria-hidden="true">
+              <span>yazı</span>
+              <span>karalama</span>
+              <span>kod</span>
+            </div>
+          </div>
         </aside>
       </section>
 
       <section class="quickGrid" aria-label="Bölümler">
         <a class="quickCard quickCard-primary" href="archive.html">
+          <span class="quickCardDoodle quickCardDoodle-wave" aria-hidden="true"></span>
           <span class="quickMeta">Yazılar</span>
           <strong>Arşiv ve tüm notlar</strong>
           <p>Bütün yazıları tarih sırasıyla tara.</p>
         </a>
 
         <a class="quickCard" href="projects.html">
+          <span class="quickCardDoodle quickCardDoodle-code" aria-hidden="true"></span>
           <span class="quickMeta">Kodlar</span>
           <strong>Projeler ve repo çıktıları</strong>
           <p>Yazılım ve ürün tarafındaki çalışmalara geç.</p>
         </a>
 
         <a class="quickCard" href="about.html">
+          <span class="quickCardDoodle quickCardDoodle-notes" aria-hidden="true"></span>
           <span class="quickMeta">Hakkımda</span>
           <strong>Kısa profil ve iletişim</strong>
           <p>Deneyim, çalışma alanları ve CV bağlantıları.</p>
         </a>
 
         <a class="quickCard" href="https://dasecoffee.co" target="_blank" rel="noopener">
+          <span class="quickCardDoodle quickCardDoodle-bean" aria-hidden="true"></span>
           <span class="quickMeta">Dış bağlantı</span>
           <strong>dase coffee</strong>
           <p>Kahve tarafındaki markaya doğrudan geçiş.</p>
@@ -222,7 +273,7 @@
             <div class="readerDate" id="readerDate"></div>
             <div class="readerTools" aria-label="Okuma araçları">
               <span class="readerToolsLabel">Metin boyutu</span>
-              <button class="asideBtn" id="readerFontDown" type="button">A−</button>
+              <button class="asideBtn" id="readerFontDown" type="button">A-</button>
               <button class="asideBtn" id="readerFontUp" type="button">A+</button>
               <button class="asideBtn" id="readerFontReset" type="button">Sıfırla</button>
             </div>
@@ -252,8 +303,6 @@
     </main>
 
     <script type="module" src="app.js"></script>
-    <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">
-      ↑
-    </button>
+    <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
   </body>
 </html>

@@ -1,4 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { htmlToText } from './content-utils.js';
 
 const SUPABASE_URL = 'https://zefzcmrsdvtbliguqedi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb';
@@ -53,21 +54,28 @@ function render(items) {
   items.forEach((p) => {
     const year = (p.date || '').slice(0, 4);
     const li = document.createElement('li');
+    const link = document.createElement('a');
+    const title = document.createElement('div');
+    const excerpt = document.createElement('div');
+    const date = document.createElement('div');
+
     li.className = 'archiveItem';
+    title.className = 't';
+    excerpt.className = 'e';
+    date.className = 'd';
 
     if (year && !anchoredYears.has(year)) {
       li.setAttribute('data-year-anchor', year);
       anchoredYears.add(year);
     }
 
-    li.innerHTML = `
-      <a href="index.html#${p.id}">
-        <div class="t">${p.title}</div>
-      </a>
-      <div class="e">${p.excerpt || ''}</div>
-      <div class="d">${fmtDate(p.date)}</div>
-    `;
+    link.href = `index.html#${p.id}`;
+    title.textContent = p.title;
+    excerpt.textContent = p.excerpt || '';
+    date.textContent = fmtDate(p.date);
 
+    link.appendChild(title);
+    li.append(link, excerpt, date);
     listEl.appendChild(li);
   });
 
@@ -90,12 +98,6 @@ document.getElementById('clear').addEventListener('click', () => {
 
 qEl.addEventListener('input', applyFilter);
 
-function stripHtml(html) {
-  const div = document.createElement('div');
-  div.innerHTML = html || '';
-  return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
-}
-
 async function loadArchive() {
   try {
     countEl.textContent = 'Yükleniyor...';
@@ -112,7 +114,7 @@ async function loadArchive() {
       id: p.id,
       title: p.title,
       date: p.date,
-      excerpt: stripHtml(p.content_html).slice(0, 160)
+      excerpt: htmlToText(p.content_html).slice(0, 160)
     }));
 
     buildTimeline(POSTS);

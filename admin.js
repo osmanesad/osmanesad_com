@@ -1,4 +1,5 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { sanitizeHtml } from "./content-utils.js";
 
 // TODO: burayı kendi Supabase bilgilerinizle doldurun
 const SUPABASE_URL = "https://zefzcmrsdvtbliguqedi.supabase.co";
@@ -97,7 +98,7 @@ function currentFormPost(statusOverride) {
   const title = elTitle.value.trim();
   const date = elDate.value;
   const type = elType.value;
-  const content_html = quill.root.innerHTML;
+  const content_html = sanitizeHtml(quill.root.innerHTML);
 
   if (!quill.getText().trim()) {
     throw new Error("İçerik boş olamaz.");

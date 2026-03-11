@@ -1,9 +1,11 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { htmlToText, setSanitizedContent } from './content-utils.js';
 
 const SUPABASE_URL = 'https://zefzcmrsdvtbliguqedi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const SITE_URL = 'https://osmanesad.com';
 const MAX_POSTS = 6;
 
 const homeHero = document.querySelector('.homeHero');
@@ -25,12 +27,22 @@ const latestPosts = document.getElementById('latestPosts');
 const randomEntryBtn = document.getElementById('randomEntry');
 const buildBadge = document.getElementById('buildBadge');
 const toTopBtn = document.getElementById('toTop');
+const pageDescription = document.querySelector('meta[name="description"]');
+const canonicalLink = document.querySelector('link[rel="canonical"]');
+const ogTitle = document.querySelector('meta[property="og:title"]');
+const ogDescription = document.querySelector('meta[property="og:description"]');
+const ogUrl = document.querySelector('meta[property="og:url"]');
+const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+const twitterDescription = document.querySelector('meta[name="twitter:description"]');
 
 let posts = [];
 const root = document.documentElement;
 const READER_FONT_KEY = 'reader_font_size';
 const READER_FONT_MIN = 17;
 const READER_FONT_MAX = 23;
+const DEFAULT_TITLE = 'Osman Esad - Ana Sayfa';
+const DEFAULT_DESCRIPTION =
+  'Osman Esad’in yazı, kod, arşiv ve hakkında bölümlerine açılan karşılama sayfası.';
 
 function setReaderFontSize(size) {
   const clamped = Math.max(READER_FONT_MIN, Math.min(READER_FONT_MAX, size));
@@ -68,15 +80,8 @@ function fmtDate(iso) {
   }
 }
 
-function stripHtml(html) {
-  if (!html) return '';
-  const tmp = document.createElement('div');
-  tmp.innerHTML = html;
-  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
-}
-
 function excerptFrom(html) {
-  const plain = stripHtml(html);
+  const plain = htmlToText(html);
   if (!plain) return 'Detaylı okumak için arşive geç.';
   return plain.length > 150 ? `${plain.slice(0, 147)}...` : plain;
 }
@@ -85,9 +90,57 @@ function entryHref(post) {
   return `index.html#${post.id}`;
 }
 
+function setMetaContent(element, content) {
+  if (element && content) {
+    element.setAttribute('content', content);
+  }
+}
+
+function syncPageMeta(post) {
+  if (!post) {
+    document.title = DEFAULT_TITLE;
+    if (pageDescription) pageDescription.setAttribute('content', DEFAULT_DESCRIPTION);
+    if (canonicalLink) canonicalLink.setAttribute('href', `${SITE_URL}/`);
+    setMetaContent(ogTitle, DEFAULT_TITLE);
+    setMetaContent(ogDescription, DEFAULT_DESCRIPTION);
+    setMetaContent(ogUrl, `${SITE_URL}/`);
+    setMetaContent(twitterTitle, DEFAULT_TITLE);
+    setMetaContent(twitterDescription, DEFAULT_DESCRIPTION);
+    return;
+  }
+
+  const title = `${post.title} | Osman Esad`;
+  const description = excerptFrom(post.content_html);
+  const url = `${SITE_URL}/index.html#${post.id}`;
+
+  document.title = title;
+  if (pageDescription) pageDescription.setAttribute('content', description);
+  if (canonicalLink) canonicalLink.setAttribute('href', url);
+  setMetaContent(ogTitle, title);
+  setMetaContent(ogDescription, description);
+  setMetaContent(ogUrl, url);
+  setMetaContent(twitterTitle, title);
+  setMetaContent(twitterDescription, description);
+}
+
 function scrollReaderIntoView(behavior = 'smooth') {
   if (!readerShell) return;
   readerShell.scrollIntoView({ behavior, block: 'start' });
+}
+
+function createPostLink(post) {
+  const a = document.createElement('a');
+  const title = document.createElement('span');
+  const date = document.createElement('span');
+
+  a.href = entryHref(post);
+  title.className = 'homeListTitle';
+  date.className = 'homeListDate';
+  title.textContent = post.title;
+  date.textContent = fmtDate(post.date);
+
+  a.append(title, date);
+  return a;
 }
 
 function renderFeatured(post) {
@@ -119,15 +172,7 @@ function renderList(items) {
   items.forEach((post) => {
     const li = document.createElement('li');
     li.className = 'homeListItem';
-
-    const a = document.createElement('a');
-    a.href = entryHref(post);
-    a.innerHTML = `
-      <span class="homeListTitle">${post.title}</span>
-      <span class="homeListDate">${fmtDate(post.date)}</span>
-    `;
-
-    li.appendChild(a);
+    li.appendChild(createPostLink(post));
     latestPosts.appendChild(li);
   });
 }
@@ -148,15 +193,7 @@ function renderReaderList(activeId) {
     .forEach((post) => {
       const li = document.createElement('li');
       li.className = 'homeListItem';
-
-      const a = document.createElement('a');
-      a.href = entryHref(post);
-      a.innerHTML = `
-        <span class="homeListTitle">${post.title}</span>
-        <span class="homeListDate">${fmtDate(post.date)}</span>
-      `;
-
-      li.appendChild(a);
+      li.appendChild(createPostLink(post));
       readerPostList.appendChild(li);
     });
 }
@@ -168,8 +205,13 @@ function renderReader(postId, options = {}) {
   if (!post) {
     readerTitle.textContent = 'Yazı bulunamadı';
     readerDate.textContent = '';
-    readerContent.innerHTML = '<p>İstenen yazı bulunamadı. Arşivden başka bir yazı açabilirsin.</p>';
+    setSanitizedContent(
+      readerContent,
+      '',
+      '<p>İstenen yazı bulunamadı. Arşivden başka bir yazı açabilirsin.</p>'
+    );
     readerPostList.innerHTML = '';
+    syncPageMeta(null);
     toggleView(true);
     scrollReaderIntoView(scrollBehavior);
     return;
@@ -177,8 +219,9 @@ function renderReader(postId, options = {}) {
 
   readerTitle.textContent = post.title;
   readerDate.textContent = fmtDate(post.date);
-  readerContent.innerHTML = post.content_html || '<p>Bu yazı için içerik bulunamadı.</p>';
+  setSanitizedContent(readerContent, post.content_html, '<p>Bu yazı için içerik bulunamadı.</p>');
   renderReaderList(post.id);
+  syncPageMeta(post);
   toggleView(true);
   scrollReaderIntoView(scrollBehavior);
 }
@@ -186,6 +229,7 @@ function renderReader(postId, options = {}) {
 function renderHome() {
   renderFeatured(posts[0]);
   renderList(posts.slice(1, MAX_POSTS + 1));
+  syncPageMeta(null);
   toggleView(false);
 }
 
@@ -268,7 +312,7 @@ if (toTopBtn) {
   });
 }
 
-fetch('/version.txt')
+fetch('./version.txt')
   .then((response) => response.text())
   .then((text) => {
     buildBadge.hidden = false;
@@ -281,6 +325,7 @@ initReaderFontSize();
 loadPosts().catch((error) => {
   renderFeatured(null);
   renderList([]);
+  syncPageMeta(null);
   toggleView(false);
   console.error(error);
 });

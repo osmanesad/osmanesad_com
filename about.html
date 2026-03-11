@@ -7,7 +7,22 @@
   <title>Osman Esad - Hakkımda</title>
   <meta
     name="description"
-    content="Osman Esad Hoşbak - kahve, ürün geliştirme, yazı ve sade sistemler etrafında çalışan bir üretici."
+    content="Osman Esad Hoşbak; kahve, ürün geliştirme, yazı ve sade sistemler etrafında çalışan bir üretici."
+  />
+  <link rel="canonical" href="https://osmanesad.com/about.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Osman Esad" />
+  <meta property="og:title" content="Osman Esad - Hakkımda" />
+  <meta
+    property="og:description"
+    content="Osman Esad Hoşbak; kahve, ürün geliştirme, yazı ve sade sistemler etrafında çalışan bir üretici."
+  />
+  <meta property="og:url" content="https://osmanesad.com/about.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Osman Esad - Hakkımda" />
+  <meta
+    name="twitter:description"
+    content="Osman Esad Hoşbak; kahve, ürün geliştirme, yazı ve sade sistemler etrafında çalışan bir üretici."
   />
   <link rel="stylesheet" href="styles.css" />
   <style>
@@ -72,7 +87,7 @@
       <div class="sectionHeroActions">
         <a class="sitePill" href="index.html">Ana sayfaya dön</a>
         <a class="sitePill" href="archive.html">Yazılara geç</a>
-        <button id="langToggle" class="langSwitch" type="button" aria-label="Switch language">
+        <button id="langToggle" class="langSwitch" type="button" aria-label="Switch language" aria-pressed="false">
           <span class="langBlock isActive" data-lang="tr">EN</span>
           <span class="langBlock" data-lang="en">TR</span>
         </button>
@@ -96,7 +111,7 @@
         <a class="action" href="mailto:byesad@gmail.com" style="text-decoration:none;">E-posta</a>
         <a class="action" href="https://dasecoffee.co" target="_blank" rel="noopener" style="text-decoration:none;">dasecoffee.co</a>
         <a class="action" href="assets/Osman_Esad_Hosbak_CV_TR_2026.pdf" target="_blank" rel="noopener" style="text-decoration:none;">CV (PDF)</a>
-        <a class="action" href="#" onclick="window.print(); return false;" style="text-decoration:none;">Yazdır / PDF al</a>
+        <button class="action" type="button" id="printTr">Yazdır / PDF al</button>
       </div>
 
       <hr />
@@ -159,7 +174,7 @@
         <a class="action" href="mailto:byesad@gmail.com" style="text-decoration:none;">Email</a>
         <a class="action" href="https://dasecoffee.co" target="_blank" rel="noopener" style="text-decoration:none;">dasecoffee.co</a>
         <a class="action" href="assets/Osman_Esad_Hosbak_CV_EN_2026.pdf" target="_blank" rel="noopener" style="text-decoration:none;">CV (PDF)</a>
-        <a class="action" href="#" onclick="window.print(); return false;" style="text-decoration:none;">Print / Save as PDF</a>
+        <button class="action" type="button" id="printEn">Print / Save as PDF</button>
       </div>
 
       <hr />
@@ -213,9 +228,12 @@
 
 <script>
   const toggle = document.getElementById("langToggle");
+  const printTr = document.getElementById("printTr");
+  const printEn = document.getElementById("printEn");
 
   function setLang(lang) {
     document.documentElement.lang = lang;
+    toggle.setAttribute("aria-pressed", String(lang === "en"));
 
     document.querySelectorAll(".langBlock").forEach((el) => {
       const elLang = el.getAttribute("data-lang");
@@ -242,6 +260,10 @@
   toggle.addEventListener("click", () => {
     const next = document.documentElement.lang === "tr" ? "en" : "tr";
     setLang(next);
+  });
+
+  [printTr, printEn].forEach((button) => {
+    button?.addEventListener("click", () => window.print());
   });
 </script>
 

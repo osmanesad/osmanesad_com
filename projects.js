@@ -22,26 +22,30 @@ function render(items) {
 
   items.forEach((r) => {
     const li = document.createElement('li');
-    li.className = 'archiveItem';
-
-    const title = safe(r.name);
-    const desc = safe(r.description || '');
-    const lang = safe(r.language || '');
-
+    const link = document.createElement('a');
+    const title = document.createElement('div');
+    const desc = document.createElement('div');
+    const meta = document.createElement('div');
     const metaBits = [];
-    if (lang) metaBits.push(lang);
+
+    li.className = 'archiveItem';
+    title.className = 't';
+    desc.className = 'e';
+    meta.className = 'd';
+
+    if (r.language) metaBits.push(safe(r.language));
     if (r.stargazers_count) metaBits.push(`★ ${r.stargazers_count}`);
     if (r.forks_count) metaBits.push(`⑂ ${r.forks_count}`);
-    const meta = metaBits.join(' · ');
 
-    li.innerHTML = `
-      <a href="${repoUrl(r.full_name)}" target="_blank" rel="noopener">
-        <div class="t">${title}</div>
-      </a>
-      <div class="e">${desc || '&nbsp;'}</div>
-      <div class="d">${meta || '&nbsp;'}</div>
-    `;
+    link.href = repoUrl(r.full_name);
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    title.textContent = safe(r.name);
+    desc.textContent = safe(r.description || '');
+    meta.textContent = metaBits.join(' · ');
 
+    link.appendChild(title);
+    li.append(link, desc, meta);
     listEl.appendChild(li);
   });
 
