@@ -109,96 +109,8 @@ const postListEl = document.getElementById('postList');
 const titleEl = document.getElementById('title');
 const dateEl = document.getElementById('dateLine');
 const contentEl = document.getElementById('content');
-const tickerTrackEl = document.getElementById('tickerTrack');
-
-function createTickerItem({ href, label, text, icon, tone = 'gold' }, hidden = false) {
-  const item = document.createElement('a');
-  item.className = `tickerItem tone-${tone}`;
-  item.href = href;
-  if (hidden) item.setAttribute('aria-hidden', 'true');
-  if (href.startsWith('http')) {
-    item.target = '_blank';
-    item.rel = 'noopener';
-  }
-
-  const iconEl = document.createElement('span');
-  iconEl.className = 'tickerIcon';
-  iconEl.setAttribute('aria-hidden', 'true');
-  iconEl.textContent = icon;
-
-  const textWrap = document.createElement('span');
-  textWrap.className = 'tickerCopy';
-
-  const labelEl = document.createElement('strong');
-  labelEl.className = 'tickerKicker';
-  labelEl.textContent = label;
-
-  const textEl = document.createElement('span');
-  textEl.className = 'tickerText';
-  textEl.textContent = text;
-
-  textWrap.append(labelEl, textEl);
-  item.append(iconEl, textWrap);
-  return item;
-}
-
-function renderTicker(items) {
-  if (!tickerTrackEl) return;
-
-  tickerTrackEl.innerHTML = '';
-  items.forEach((item) => tickerTrackEl.appendChild(createTickerItem(item)));
-}
-
-async function loadTicker(posts) {
-  const items = [];
-
-  if (posts[0]) {
-    items.push({
-      href: `index.html#${posts[0].id}`,
-      label: 'En son yazı',
-      text: posts[0].title,
-      icon: '●',
-      tone: 'gold'
-    });
-  }
-
-  try {
-    const res = await fetch(
-      'https://api.github.com/users/osmanesad/repos?per_page=2&sort=pushed',
-      { headers: { Accept: 'application/vnd.github+json' } }
-    );
-
-    if (res.ok) {
-      const repos = await res.json();
-      repos
-        .filter((repo) => !repo.fork && !repo.archived)
-        .slice(0, 2)
-        .forEach((repo, index) => {
-          items.push({
-            href: repo.html_url,
-            label: index === 0 ? 'Son kod' : 'Bir önceki kod',
-            text: repo.name,
-            icon: index === 0 ? '▲' : '■',
-            tone: index === 0 ? 'blue' : 'coral'
-          });
-        });
-    }
-  } catch (error) {
-    console.warn('Ticker repo fetch failed:', error);
-  }
-
-  if (!items.length) {
-    items.push({
-      href: 'archive.html',
-      label: 'Akış',
-      text: 'Yazılar ve projeler burada toplanıyor.',
-      icon: '●',
-      tone: 'gold'
-    });
-  }
-
-  renderTicker(items);
-}
+const welcomeArchiveMetaEl = document.getElementById('welcomeArchiveMeta');
+const welcomeProjectsMetaEl = document.getElementById('welcomeProjectsMeta');
 
 function fmtDate(iso) {
   if (!iso) return '';
@@ -212,6 +124,29 @@ function fmtDate(iso) {
   } catch {
     return iso;
   }
+}
+
+function updateWelcomeMeta(posts) {
+  if (welcomeArchiveMetaEl && posts[0]) {
+    welcomeArchiveMetaEl.textContent = `En son: ${posts[0].title} · ${fmtDate(posts[0].date)}`;
+  }
+
+  if (!welcomeProjectsMetaEl) return;
+
+  fetch('https://api.github.com/users/osmanesad/repos?per_page=1&sort=pushed', {
+    headers: { Accept: 'application/vnd.github+json' }
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+      return res.json();
+    })
+    .then((repos) => {
+      const repo = (repos || []).find((item) => !item.fork && !item.archived) || repos?.[0];
+      if (!repo) return;
+      const lang = repo.language ? ` · ${repo.language}` : '';
+      welcomeProjectsMetaEl.textContent = `Son çalışma: ${repo.name}${lang}`;
+    })
+    .catch(() => {});
 }
 
 // Like per post (local)
@@ -361,7 +296,7 @@ async function load() {
   }));
 
   const id = location.hash.replace('#', '').trim() || (POSTS[0] && POSTS[0].id);
-  loadTicker(POSTS);
+  updateWelcomeMeta(POSTS);
   renderSidebar(id);
   setActivePost(id);
 }
