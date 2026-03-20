@@ -3,72 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="./triquetra.png" type="image/x-icon" />
-  <title>Osman Esad - Kodlar</title>
-  <meta
-    name="description"
-    content="Osman Esad’in GitHub tarafındaki açık projelerini bir araya getiren sayfa."
-  />
-  <link rel="canonical" href="https://osmanesad.com/projects.html" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Osman Esad" />
-  <meta property="og:title" content="Osman Esad - Kodlar" />
-  <meta
-    property="og:description"
-    content="Osman Esad’in GitHub tarafındaki açık projelerini bir araya getiren sayfa."
-  />
-  <meta property="og:url" content="https://osmanesad.com/projects.html" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Osman Esad - Kodlar" />
-  <meta
-    name="twitter:description"
-    content="Osman Esad’in GitHub tarafındaki açık projelerini bir araya getiren sayfa."
-  />
+  <title>Osman Esad — Kodlar</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="shell subpageShell shell-archive">
-    <header class="siteBar">
-      <div class="siteBarBrand">
-        <a class="name" href="index.html">Osman Esad</a>
-        <p class="subtitle">Coffee · Writing · Code</p>
+  <main class="shell shell-archive">
+    <header class="archiveHeader">
+      <div>
+        <h1 class="archiveTitle">Kodlar</h1>
+        <div class="archiveMeta" id="countLine">Yükleniyor…</div>
       </div>
-
-      <nav class="siteBarNav" aria-label="Site bölümleri">
-        <a class="sitePill" href="index.html">Ana sayfa</a>
-        <a class="sitePill" href="projects.html" aria-current="page">Kodlar</a>
-        <a class="sitePill" href="about.html">Hakkımda</a>
-        <a class="sitePill" href="archive.html">Arşiv</a>
-      </nav>
+      <div class="archiveTopbar">
+        <a class="asideBtn" href="index.html">← Geri</a>
+      </div>
     </header>
 
-    <section class="sectionHero">
-      <div class="sectionHeroCard">
-        <span class="homeEyebrow">Projeler</span>
-        <h1>Kodlar</h1>
-        <p class="sectionHeroLead">
-          GitHub tarafındaki açık projeleri burada bir araya getirdim.
-          Sessizce bakınmak, repo aramak ya da son güncellenen işleri görmek için uygun bir alan.
-        </p>
-        <div class="sectionHeroActions">
-          <a class="sitePill" href="index.html">Ana sayfaya dön</a>
-          <a class="sitePill" href="archive.html">Yazılara geç</a>
-        </div>
-      </div>
-    </section>
-
-    <div class="panelBlock">
-      <div class="archiveHeader">
-        <div class="archiveMeta" id="countLine">Yükleniyor...</div>
-      </div>
-
-      <div class="archiveControls">
-        <input id="q" class="archiveSearch" type="search" placeholder="Repo içinde ara..." />
-        <button class="asideBtn" id="clear">Temizle</button>
-      </div>
-
-      <ul class="archiveList2" id="list"></ul>
+    <div class="archiveControls">
+      <input id="q" class="archiveSearch" type="search" placeholder="Repo içinde ara…" />
+      <button class="asideBtn" id="clear">Temizle</button>
     </div>
+
+    <ul class="archiveList2" id="list"></ul>
   </main>
 
   <script type="module" src="projects.js"></script>
