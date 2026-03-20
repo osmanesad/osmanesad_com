@@ -32,13 +32,25 @@ function render(items){
     if(r.forks_count) metaBits.push(`⑂ ${r.forks_count}`);
     const meta = metaBits.join(" · ");
 
-    li.innerHTML = `
-      <a href="${repoUrl(r.full_name)}" target="_blank" rel="noopener">
-        <div class="t">${title}</div>
-      </a>
-      <div class="e">${desc || "&nbsp;"}</div>
-      <div class="d">${meta || "&nbsp;"}</div>
-    `;
+    const link = document.createElement("a");
+    link.href = repoUrl(r.full_name);
+    link.target = "_blank";
+    link.rel = "noopener";
+
+    const titleEl = document.createElement("div");
+    titleEl.className = "t";
+    titleEl.textContent = title;
+    link.appendChild(titleEl);
+
+    const descEl = document.createElement("div");
+    descEl.className = "e";
+    descEl.textContent = desc || "Açıklama yok.";
+
+    const metaEl = document.createElement("div");
+    metaEl.className = "d";
+    metaEl.textContent = meta || "Detay yok.";
+
+    li.append(link, descEl, metaEl);
     listEl.appendChild(li);
   });
 

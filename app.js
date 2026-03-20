@@ -1,4 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { setSanitizedContent } from './content-utils.js';
 
 const SUPABASE_URL = 'https://zefzcmrsdvtbliguqedi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb';
@@ -108,6 +109,96 @@ const postListEl = document.getElementById('postList');
 const titleEl = document.getElementById('title');
 const dateEl = document.getElementById('dateLine');
 const contentEl = document.getElementById('content');
+const tickerTrackEl = document.getElementById('tickerTrack');
+
+function createTickerItem({ href, label, text, icon, tone = 'gold' }, hidden = false) {
+  const item = document.createElement('a');
+  item.className = `tickerItem tone-${tone}`;
+  item.href = href;
+  if (hidden) item.setAttribute('aria-hidden', 'true');
+  if (href.startsWith('http')) {
+    item.target = '_blank';
+    item.rel = 'noopener';
+  }
+
+  const iconEl = document.createElement('span');
+  iconEl.className = 'tickerIcon';
+  iconEl.setAttribute('aria-hidden', 'true');
+  iconEl.textContent = icon;
+
+  const textWrap = document.createElement('span');
+  textWrap.className = 'tickerCopy';
+
+  const labelEl = document.createElement('strong');
+  labelEl.className = 'tickerKicker';
+  labelEl.textContent = label;
+
+  const textEl = document.createElement('span');
+  textEl.className = 'tickerText';
+  textEl.textContent = text;
+
+  textWrap.append(labelEl, textEl);
+  item.append(iconEl, textWrap);
+  return item;
+}
+
+function renderTicker(items) {
+  if (!tickerTrackEl) return;
+
+  tickerTrackEl.innerHTML = '';
+  items.forEach((item) => tickerTrackEl.appendChild(createTickerItem(item)));
+}
+
+async function loadTicker(posts) {
+  const items = [];
+
+  if (posts[0]) {
+    items.push({
+      href: `index.html#${posts[0].id}`,
+      label: 'En son yazı',
+      text: posts[0].title,
+      icon: '●',
+      tone: 'gold'
+    });
+  }
+
+  try {
+    const res = await fetch(
+      'https://api.github.com/users/osmanesad/repos?per_page=2&sort=pushed',
+      { headers: { Accept: 'application/vnd.github+json' } }
+    );
+
+    if (res.ok) {
+      const repos = await res.json();
+      repos
+        .filter((repo) => !repo.fork && !repo.archived)
+        .slice(0, 2)
+        .forEach((repo, index) => {
+          items.push({
+            href: repo.html_url,
+            label: index === 0 ? 'Son kod' : 'Bir önceki kod',
+            text: repo.name,
+            icon: index === 0 ? '▲' : '■',
+            tone: index === 0 ? 'blue' : 'coral'
+          });
+        });
+    }
+  } catch (error) {
+    console.warn('Ticker repo fetch failed:', error);
+  }
+
+  if (!items.length) {
+    items.push({
+      href: 'archive.html',
+      label: 'Akış',
+      text: 'Yazılar ve projeler burada toplanıyor.',
+      icon: '●',
+      tone: 'gold'
+    });
+  }
+
+  renderTicker(items);
+}
 
 function fmtDate(iso) {
   if (!iso) return '';
@@ -212,7 +303,12 @@ function renderSidebar(activeId) {
     a.className = 'postLink';
     a.href = '#' + p.id;
     a.setAttribute('aria-current', p.id === activeId ? 'true' : 'false');
-    a.innerHTML = `<div>${p.title}</div><span class="postMeta">${fmtDate(p.date)}</span>`;
+    const title = document.createElement('div');
+    title.textContent = p.title;
+    const meta = document.createElement('span');
+    meta.className = 'postMeta';
+    meta.textContent = fmtDate(p.date);
+    a.append(title, meta);
     li.appendChild(a);
     postListEl.appendChild(li);
   });
@@ -221,7 +317,12 @@ function renderSidebar(activeId) {
   const a = document.createElement('a');
   a.className = 'postLink';
   a.href = 'archive.html';
-  a.innerHTML = `<div>→ Tümü / Arşiv</div><span class="postMeta">${POSTS.length} yazı</span>`;
+  const label = document.createElement('div');
+  label.textContent = '→ Tümü / Arşiv';
+  const meta = document.createElement('span');
+  meta.className = 'postMeta';
+  meta.textContent = `${POSTS.length} yazı`;
+  a.append(label, meta);
   li.appendChild(a);
   postListEl.appendChild(li);
 }
@@ -235,10 +336,10 @@ function setActivePost(id) {
   }
   titleEl.textContent = p.title;
   dateEl.textContent = fmtDate(p.date);
-  contentEl.innerHTML = p.content || '';
+  setSanitizedContent(contentEl, p.content, '<p>İçerik bulunamadı.</p>');
   Like.setPost(p.id);
   renderSidebar(p.id);
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 async function load() {
@@ -260,6 +361,7 @@ async function load() {
   }));
 
   const id = location.hash.replace('#', '').trim() || (POSTS[0] && POSTS[0].id);
+  loadTicker(POSTS);
   renderSidebar(id);
   setActivePost(id);
 }
@@ -291,44 +393,6 @@ if (toTopBtn) {
 
   toTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-}
-
-// --- Mobile drawer: quick menu ---
-const openPostsBtn = document.getElementById('openPosts');
-const drawer = document.getElementById('drawer');
-const drawerBackdrop = document.getElementById('drawerBackdrop');
-const closeDrawerBtn = document.getElementById('closeDrawer');
-const randomBtnMobile = document.getElementById('randomBtnMobile');
-
-function openDrawer() {
-  if (!drawer || !drawerBackdrop) return;
-  drawer.hidden = false;
-  drawerBackdrop.hidden = false;
-  document.body.style.overflow = 'hidden';
-}
-
-function closeDrawer() {
-  if (!drawer || !drawerBackdrop) return;
-  drawer.hidden = true;
-  drawerBackdrop.hidden = true;
-  document.body.style.overflow = '';
-}
-
-if (openPostsBtn) openPostsBtn.addEventListener('click', openDrawer);
-if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
-if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeDrawer();
-});
-
-// Mobil menüde "Rastgele"
-if (randomBtnMobile) {
-  randomBtnMobile.addEventListener('click', () => {
-    if (!POSTS.length) return;
-    const pick = POSTS[Math.floor(Math.random() * POSTS.length)];
-    location.hash = pick.id;
-    closeDrawer();
   });
 }
 

@@ -60,13 +60,23 @@ function render(items){
       anchoredYears.add(year);
     }
 
-    li.innerHTML=`
-      <a href="index.html#${p.id}">
-        <div class="t">${p.title}</div>
-      </a>
-      <div class="e">${p.excerpt || ''}</div>
-      <div class="d">${fmtDate(p.date)}</div>
-    `;
+    const link = document.createElement('a');
+    link.href = `index.html#${p.id}`;
+
+    const title = document.createElement('div');
+    title.className = 't';
+    title.textContent = p.title;
+    link.appendChild(title);
+
+    const excerpt = document.createElement('div');
+    excerpt.className = 'e';
+    excerpt.textContent = p.excerpt || '';
+
+    const date = document.createElement('div');
+    date.className = 'd';
+    date.textContent = fmtDate(p.date);
+
+    li.append(link, excerpt, date);
     listEl.appendChild(li);
   });
 

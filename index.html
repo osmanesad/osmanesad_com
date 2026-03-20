@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="./triquetra.png" type="image/x-icon" />
     <title>Osman Esad — Yazılar</title>
+    <meta
+      name="description"
+      content="Osman Esad'in kahve, dijital ürünler, yazı ve sade sistemler etrafında topladığı yazılar ve projeler."
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -111,13 +115,27 @@
          
         </nav>
 
-        <button class="mobileMenuBtn" id="openPosts" aria-label="Yazıları aç">
-          ≡
-        </button>
       </header>
 
       <div class="layout">
         <section class="page">
+          <section class="welcomeCard" aria-labelledby="welcomeTitle">
+            <div class="welcomeEyebrow">Merhaba</div>
+            <h2 id="welcomeTitle">Burada yazılarımı, projelerimi ve ne yaptığımı kısa ve sade bir akış içinde bulabilirsin.</h2>
+            <p>
+              Kahve kültürü, dijital ürün geliştirme, marka çalışmaları ve kişisel notlar etrafında ürettiğim şeyleri burada topluyorum.
+              İlk kez geliyorsan aşağıdaki kısa akıştan en yeni şeylere göz atabilirsin.
+            </p>
+            <div class="welcomeTickerShell">
+              <div class="tickerLabel">Akış</div>
+              <div class="welcomeTicker" id="welcomeTicker" aria-live="polite" aria-label="Güncel akış">
+                <div class="tickerTrack" id="tickerTrack">
+                  <span class="tickerLoading">Akış hazırlanıyor…</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section class="toolbar" aria-label="Okuma modu">
             <div class="group">
               <div class="label">Metin</div>
@@ -251,23 +269,6 @@
         </aside>
       </div>
     </main>
-    <div class="drawerBackdrop" id="drawerBackdrop" hidden></div>
-
-    <aside class="drawer" id="drawer" aria-label="Menü" hidden>
-  <div class="drawerTop">
-    <div class="drawerTitle"><b> Menü</b></div>
-    <button class="drawerClose" id="closeDrawer" aria-label="Kapat">✕</button>
-  </div>
-
-  <nav class="drawerQuick" aria-label="Hızlı menü">
-    <a class="drawerArchive" href="projects.html">Kodlar →</a>
-     <a class="drawerArchive" href="archive.html">Arşiv →</a>
-    <a class="drawerArchive" href="about.html">Hakkımda →</a>
-   
-    <button class="drawerArchive" id="randomBtnMobile" type="button">Rastgele →</button>
-  </nav>
-</aside>
-
     <script type="module" src="app.js"></script>
 
     <button
