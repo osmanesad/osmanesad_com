@@ -42,7 +42,7 @@ const READER_FONT_MIN = 17;
 const READER_FONT_MAX = 23;
 const DEFAULT_TITLE = 'Osman Esad - Ana Sayfa';
 const DEFAULT_DESCRIPTION =
-  'Osman Esad’in yazı, kod, arşiv ve hakkında bölümlerine açılan karşılama sayfası.';
+  "Osman Esad'in yazı, kod, arşiv ve hakkında bölümlerine açılan karşılama sayfası.";
 
 function setReaderFontSize(size) {
   const clamped = Math.max(READER_FONT_MIN, Math.min(READER_FONT_MAX, size));
