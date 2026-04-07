@@ -1,12 +1,12 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-import { htmlToText, setSanitizedContent } from './content-utils.js';
+import { setSanitizedContent } from './content-utils.js';
 
 const SUPABASE_URL = 'https://zefzcmrsdvtbliguqedi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const SITE_URL = 'https://osmanesad.com';
-const MAX_POSTS = 6;
+// Sidebar\'da gösterilecek maksimum yazı sayısı
+const TOP_N = 9;
 
 const homeHero = document.querySelector('.homeHero');
 const quickGrid = document.querySelector('.quickGrid');
@@ -59,18 +59,108 @@ function initReaderFontSize() {
   } catch (_) {
     setReaderFontSize(19);
   }
+  return id;
 }
 
-function currentPostId() {
-  return window.location.hash.replace('#', '').trim();
+// Theme + font size
+const THEMES = {
+  white: {
+    bg: '#ffffff',
+    text: '#111111',
+    muted: '#5d2424',
+    line: '#e7e7e7',
+    chip: '#f4f4f4',
+    chipText: '#111',
+    shadow: 'rgba(0,0,0,0.04)'
+  },
+  sepia: {
+    bg: '#f6f1e5',
+    text: '#1a1a1a',
+    muted: '#6b5f55',
+    line: '#e7ddcf',
+    chip: '#efe6d7',
+    chipText: '#1a1a1a',
+    shadow: 'rgba(0,0,0,0.04)'
+  },
+  gray: {
+    bg: '#f1f1f1',
+    text: '#111111',
+    muted: '#6b6b6b',
+    line: '#dedede',
+    chip: '#e9e9e9',
+    chipText: '#111',
+    shadow: 'rgba(0,0,0,0.04)'
+  },
+  dark: {
+    bg: '#0e0f12',
+    text: '#f3f4f6',
+    muted: '#a1a1aa',
+    line: '#22242a',
+    chip: '#17181d',
+    chipText: '#f3f4f6',
+    shadow: 'rgba(0,0,0,0.25)'
+  }
+};
+const root = document.documentElement;
+
+function applyTheme(name) {
+  const t = THEMES[name] || THEMES.white;
+  root.style.setProperty('--bg', t.bg);
+  root.style.setProperty('--text', t.text);
+  root.style.setProperty('--muted', t.muted);
+  root.style.setProperty('--line', t.line);
+  root.style.setProperty('--chip', t.chip);
+  root.style.setProperty('--chipText', t.chipText);
+  root.style.setProperty('--shadow', t.shadow);
+
+  document
+    .querySelectorAll('.dot')
+    .forEach((d) => d.setAttribute('aria-pressed', 'false'));
+  const idMap = { white: 't-white', sepia: 't-sepia', gray: 't-gray', dark: 't-dark' };
+  const btn = document.getElementById(idMap[name]);
+  if (btn) btn.setAttribute('aria-pressed', 'true');
+
+  localStorage.setItem('read_theme', name);
 }
+
+const MIN = 16,
+  MAX = 22;
+function setFontSize(px) {
+  const clamped = Math.max(MIN, Math.min(MAX, px));
+  root.style.setProperty('--fontSize', clamped + 'px');
+  localStorage.setItem('read_font', String(clamped));
+}
+
+document.getElementById('decrease').addEventListener('click', () => {
+  const current = parseInt(getComputedStyle(root).getPropertyValue('--fontSize')) || 18;
+  setFontSize(current - 1);
+});
+document.getElementById('increase').addEventListener('click', () => {
+  const current = parseInt(getComputedStyle(root).getPropertyValue('--fontSize')) || 18;
+  setFontSize(current + 1);
+});
+
+document.getElementById('t-white').addEventListener('click', () => applyTheme('white'));
+document.getElementById('t-sepia').addEventListener('click', () => applyTheme('sepia'));
+document.getElementById('t-gray').addEventListener('click', () => applyTheme('gray'));
+document.getElementById('t-dark').addEventListener('click', () => applyTheme('dark'));
+
+applyTheme(localStorage.getItem('read_theme') || 'white');
+setFontSize(parseInt(localStorage.getItem('read_font') || '18', 10));
+
+// DOM
+const postListEl = document.getElementById('postList');
+const titleEl = document.getElementById('title');
+const dateEl = document.getElementById('dateLine');
+const contentEl = document.getElementById('content');
+const welcomeArchiveMetaEl = document.getElementById('welcomeArchiveMeta');
+const welcomeProjectsMetaEl = document.getElementById('welcomeProjectsMeta');
 
 function fmtDate(iso) {
   if (!iso) return '';
-
   try {
-    const date = new Date(`${iso}T00:00:00`);
-    return date.toLocaleDateString('tr-TR', {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -80,252 +170,212 @@ function fmtDate(iso) {
   }
 }
 
-function excerptFrom(html) {
-  const plain = htmlToText(html);
-  if (!plain) return 'Detaylı okumak için arşive geç.';
-  return plain.length > 150 ? `${plain.slice(0, 147)}...` : plain;
-}
-
-function entryHref(post) {
-  return `index.html#${post.id}`;
-}
-
-function setMetaContent(element, content) {
-  if (element && content) {
-    element.setAttribute('content', content);
-  }
-}
-
-function syncPageMeta(post) {
-  if (!post) {
-    document.title = DEFAULT_TITLE;
-    if (pageDescription) pageDescription.setAttribute('content', DEFAULT_DESCRIPTION);
-    if (canonicalLink) canonicalLink.setAttribute('href', `${SITE_URL}/`);
-    setMetaContent(ogTitle, DEFAULT_TITLE);
-    setMetaContent(ogDescription, DEFAULT_DESCRIPTION);
-    setMetaContent(ogUrl, `${SITE_URL}/`);
-    setMetaContent(twitterTitle, DEFAULT_TITLE);
-    setMetaContent(twitterDescription, DEFAULT_DESCRIPTION);
-    return;
+function updateWelcomeMeta(posts) {
+  if (welcomeArchiveMetaEl && posts[0]) {
+    welcomeArchiveMetaEl.textContent = `En son: ${posts[0].title} · ${fmtDate(posts[0].date)}`;
   }
 
-  const title = `${post.title} | Osman Esad`;
-  const description = excerptFrom(post.content_html);
-  const url = `${SITE_URL}/index.html#${post.id}`;
+  if (!welcomeProjectsMetaEl) return;
 
-  document.title = title;
-  if (pageDescription) pageDescription.setAttribute('content', description);
-  if (canonicalLink) canonicalLink.setAttribute('href', url);
-  setMetaContent(ogTitle, title);
-  setMetaContent(ogDescription, description);
-  setMetaContent(ogUrl, url);
-  setMetaContent(twitterTitle, title);
-  setMetaContent(twitterDescription, description);
+  fetch('https://api.github.com/users/osmanesad/repos?per_page=1&sort=pushed', {
+    headers: { Accept: 'application/vnd.github+json' }
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+      return res.json();
+    })
+    .then((repos) => {
+      const repo = (repos || []).find((item) => !item.fork && !item.archived) || repos?.[0];
+      if (!repo) return;
+      const lang = repo.language ? ` · ${repo.language}` : '';
+      welcomeProjectsMetaEl.textContent = `Son çalışma: ${repo.name}${lang}`;
+    })
+    .catch(() => {});
 }
 
-function scrollReaderIntoView(behavior = 'smooth') {
-  if (!readerShell) return;
-  readerShell.scrollIntoView({ behavior, block: 'start' });
-}
+// Like per post (local)
+const likeBtn = document.getElementById('likeBtn');
+const likeCountEl = document.getElementById('likeCount');
+const Like = {
+  postId: null,
+  keyLiked() {
+    return `liked_once_v1::${this.postId}`;
+  },
 
-function createPostLink(post) {
-  const a = document.createElement('a');
-  const title = document.createElement('span');
-  const date = document.createElement('span');
+  async fetchCount() {
+    const { data, error } = await supabase
+      .from('post_likes')
+      .select('likes_count')
+      .eq('slug', this.postId)
+      .maybeSingle();
+    if (error) throw error;
+    return data?.likes_count ?? 0;
+  },
 
-  a.href = entryHref(post);
-  title.className = 'homeListTitle';
-  date.className = 'homeListDate';
-  title.textContent = post.title;
-  date.textContent = fmtDate(post.date);
+  async render() {
+    const liked = localStorage.getItem(this.keyLiked()) === '1';
+    likeBtn.classList.toggle('liked', liked);
 
-  a.append(title, date);
-  return a;
-}
+    try {
+      const count = await this.fetchCount();
+      likeCountEl.textContent = String(count);
+    } catch (e) {
+      console.warn('Like fetch failed:', e);
+      // fallback (keeps UI stable if network fails)
+      likeCountEl.textContent = likeCountEl.textContent || '0';
+    }
+  },
 
-function renderFeatured(post) {
-  if (!post) {
-    featuredTitle.textContent = 'Henüz yazı yok';
-    featuredDate.textContent = '';
-    featuredExcerpt.textContent = 'Yeni içerikler eklendiğinde burada gösterilecek.';
-    featuredEntry.href = 'archive.html';
-    return;
+  setPost(id) {
+    this.postId = id;
+    this.render();
+  },
+
+  async likeOnce() {
+    const liked = localStorage.getItem(this.keyLiked()) === '1';
+    if (liked) return;
+
+    try {
+      const { data, error } = await supabase.rpc('like_once', {
+        p_slug: this.postId,
+        p_visitor_id: getVisitorId()
+      });
+      if (error) throw error;
+      likeCountEl.textContent = String(data);
+      localStorage.setItem(this.keyLiked(), '1');
+      likeBtn.classList.add('liked');
+    } catch (e) {
+      console.warn('Like failed:', e);
+    }
   }
+};
+likeBtn.addEventListener('click', () => Like.likeOnce());
 
-  featuredEntry.href = entryHref(post);
-  featuredDate.textContent = fmtDate(post.date);
-  featuredTitle.textContent = post.title;
-  featuredExcerpt.textContent = excerptFrom(post.content_html);
-}
+// Share current hash URL
+const shareBtn = document.getElementById('shareBtn');
+shareBtn.addEventListener('click', async () => {
+  const url = window.location.href;
+  const title = document.title + ' — ' + (titleEl.textContent || 'Yazı');
+  try {
+    if (navigator.share) {
+      await navigator.share({ title, url });
+    } else {
+      await navigator.clipboard.writeText(url);
+      const original = shareBtn.innerHTML;
+      shareBtn.textContent = 'Kopyalandı';
+      setTimeout(() => {
+        shareBtn.innerHTML = original;
+      }, 900);
+    }
+  } catch (e) {}
+});
 
-function renderList(items) {
-  latestPosts.innerHTML = '';
+// Data
+let POSTS = [];
 
-  if (!items.length) {
-    const empty = document.createElement('p');
-    empty.className = 'homeEmpty';
-    empty.textContent = 'Gösterilecek yazı bulunamadı.';
-    latestPosts.appendChild(empty);
-    return;
-  }
-
-  items.forEach((post) => {
+function renderSidebar(activeId) {
+  postListEl.innerHTML = '';
+  const top = POSTS.slice(0, TOP_N);
+  top.forEach((p) => {
     const li = document.createElement('li');
-    li.className = 'homeListItem';
-    li.appendChild(createPostLink(post));
-    latestPosts.appendChild(li);
+    const a = document.createElement('a');
+    a.className = 'postLink';
+    a.href = '#' + p.id;
+    a.setAttribute('aria-current', p.id === activeId ? 'true' : 'false');
+    const title = document.createElement('div');
+    title.textContent = p.title;
+    const meta = document.createElement('span');
+    meta.className = 'postMeta';
+    meta.textContent = fmtDate(p.date);
+    a.append(title, meta);
+    li.appendChild(a);
+    postListEl.appendChild(li);
   });
+
+  const li = document.createElement('li');
+  const a = document.createElement('a');
+  a.className = 'postLink';
+  a.href = 'archive.html';
+  const label = document.createElement('div');
+  label.textContent = '→ Tümü / Arşiv';
+  const meta = document.createElement('span');
+  meta.className = 'postMeta';
+  meta.textContent = `${POSTS.length} yazı`;
+  a.append(label, meta);
+  li.appendChild(a);
+  postListEl.appendChild(li);
 }
 
-function toggleView(isReader) {
-  if (homeHero) homeHero.hidden = isReader;
-  if (quickGrid) quickGrid.hidden = isReader;
-  if (homeContent) homeContent.hidden = isReader;
-  if (readerShell) readerShell.hidden = !isReader;
-}
-
-function renderReaderList(activeId) {
-  readerPostList.innerHTML = '';
-
-  posts
-    .filter((post) => post.id !== activeId)
-    .slice(0, MAX_POSTS)
-    .forEach((post) => {
-      const li = document.createElement('li');
-      li.className = 'homeListItem';
-      li.appendChild(createPostLink(post));
-      readerPostList.appendChild(li);
-    });
-}
-
-function renderReader(postId, options = {}) {
-  const { scrollBehavior = 'auto' } = options;
-  const post = posts.find((item) => item.id === postId);
-
-  if (!post) {
-    readerTitle.textContent = 'Yazı bulunamadı';
-    readerDate.textContent = '';
-    setSanitizedContent(
-      readerContent,
-      '',
-      '<p>İstenen yazı bulunamadı. Arşivden başka bir yazı açabilirsin.</p>'
-    );
-    readerPostList.innerHTML = '';
-    syncPageMeta(null);
-    toggleView(true);
-    scrollReaderIntoView(scrollBehavior);
+function setActivePost(id) {
+  const p = POSTS.find((x) => x.id === id) || POSTS[0];
+  if (!p) {
+    titleEl.textContent = 'Yazı bulunamadı';
+    contentEl.innerHTML = '';
     return;
   }
-
-  readerTitle.textContent = post.title;
-  readerDate.textContent = fmtDate(post.date);
-  setSanitizedContent(readerContent, post.content_html, '<p>Bu yazı için içerik bulunamadı.</p>');
-  renderReaderList(post.id);
-  syncPageMeta(post);
-  toggleView(true);
-  scrollReaderIntoView(scrollBehavior);
+  titleEl.textContent = p.title;
+  dateEl.textContent = fmtDate(p.date);
+  setSanitizedContent(contentEl, p.content, '<p>İçerik bulunamadı.</p>');
+  Like.setPost(p.id);
+  renderSidebar(p.id);
+  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
-function renderHome() {
-  renderFeatured(posts[0]);
-  renderList(posts.slice(1, MAX_POSTS + 1));
-  syncPageMeta(null);
-  toggleView(false);
-}
-
-function syncView() {
-  const postId = currentPostId();
-  if (postId) {
-    renderReader(postId, { scrollBehavior: 'auto' });
-    return;
-  }
-
-  renderHome();
-}
-
-async function loadPosts() {
+async function load() {
+  // Supabase'ten sadece yayındaki (published) yazıları çek
   const { data, error } = await supabase
     .from('posts')
-    .select('id,title,date,content_html,status')
+    .select('id,title,date,type,content_html,status')
     .eq('status', 'published')
     .order('date', { ascending: false });
 
   if (error) throw error;
 
-  posts = data || [];
-  syncView();
+  POSTS = (data || []).map((p) => ({
+    id: p.id,
+    title: p.title,
+    date: p.date,
+    type: p.type,
+    content: p.content_html
+  }));
+
+  const id = location.hash.replace('#', '').trim() || (POSTS[0] && POSTS[0].id);
+  updateWelcomeMeta(POSTS);
+  renderSidebar(id);
+  setActivePost(id);
 }
 
-if (randomEntryBtn) {
-  randomEntryBtn.addEventListener('click', () => {
-    if (!posts.length) {
-      window.location.href = 'archive.html';
-      return;
-    }
+window.addEventListener('hashchange', () =>
+  setActivePost(location.hash.replace('#', '').trim())
+);
 
-    const pick = posts[Math.floor(Math.random() * posts.length)];
-    window.location.href = entryHref(pick);
-  });
-}
-
-if (readerFontDown) {
-  readerFontDown.addEventListener('click', () => {
-    const current = parseInt(getComputedStyle(root).getPropertyValue('--readerFontSize'), 10) || 19;
-    setReaderFontSize(current - 1);
-  });
-}
-
-if (readerFontUp) {
-  readerFontUp.addEventListener('click', () => {
-    const current = parseInt(getComputedStyle(root).getPropertyValue('--readerFontSize'), 10) || 19;
-    setReaderFontSize(current + 1);
-  });
-}
-
-if (readerFontReset) {
-  readerFontReset.addEventListener('click', () => {
-    setReaderFontSize(19);
-  });
-}
-
-window.addEventListener('hashchange', () => {
-  const postId = currentPostId();
-  if (postId) {
-    renderReader(postId, { scrollBehavior: 'smooth' });
-    return;
-  }
-
-  renderHome();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+document.getElementById('randomBtn').addEventListener('click', () => {
+  if (!POSTS.length) return;
+  const pick = POSTS[Math.floor(Math.random() * POSTS.length)];
+  location.hash = pick.id;
 });
 
+load().catch((err) => {
+  titleEl.textContent = 'Yükleme hatası';
+  contentEl.innerHTML = '<p>Yazılar yüklenemedi. Lütfen tekrar deneyin.</p>';
+  console.error(err);
+});
+
+// --- Scroll to top (Index) ---
+const toTopBtn = document.getElementById('toTop');
 if (toTopBtn) {
-  const toggleToTop = () => {
+  const toggle = () => {
     toTopBtn.classList.toggle('show', window.scrollY > 500);
   };
-
-  window.addEventListener('scroll', toggleToTop, { passive: true });
-  toggleToTop();
+  window.addEventListener('scroll', toggle, { passive: true });
+  toggle();
 
   toTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
 
-fetch('./version.txt')
-  .then((response) => response.text())
-  .then((text) => {
-    buildBadge.hidden = false;
-    buildBadge.textContent = text.trim();
-  })
+fetch('/version.txt')
+  .then((r) => r.text())
+  .then((t) => (document.getElementById('betaBadge').textContent = t.trim()))
   .catch(() => {});
-
-initReaderFontSize();
-
-loadPosts().catch((error) => {
-  renderFeatured(null);
-  renderList([]);
-  syncPageMeta(null);
-  toggleView(false);
-  console.error(error);
-});
