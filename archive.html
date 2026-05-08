@@ -1,39 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Osman Esad — Arşiv</title>
-  <meta
-    name="description"
-    content="Osman Esad'in yayinlanmis tum yazilarini tarih sirasiyla gezebilecegin arşiv sayfasi."
-  />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main class="shell shell-archive">
-    <header class="archiveHeader">
-      <div>
-        <h1 class="archiveTitle">Arşiv</h1>
-        <div class="archiveMeta" id="countLine">Yükleniyor…</div>
-      </div>
-      <div class="archiveTopbar">
-        <a class="asideBtn" href="index.html">← Okumaya dön</a>
-      </div>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./triquetra.png" type="image/x-icon" />
+    <title>Osman Esad - Yazılar</title>
+    <meta name="description" content="Osman Esad'in yayınlanmış tüm yazılarını tarih sırasıyla gezebileceğin arşiv." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="siteShell">
+      <aside class="siteRail" aria-label="Site menüsü">
+        <div>
+          <div class="railTop"><a class="brand" href="index.html">Osman Esad</a></div>
+          <nav class="railNav" aria-label="Ana gezinme">
+            <a href="index.html">Anasayfa</a>
+            <a href="archive.html" aria-current="page">Yazılar</a>
+            <a href="projects.html">Kodlar</a>
+            <a href="about.html">Hakkımda</a>
+            <a href="mailto:byesad@gmail.com">İletişim</a>
+          </nav>
+        </div>
+        <img class="railSketch" src="assets/art/pera-sketch.svg" alt="Pera ve Galata çizimi" />
+        <nav class="railSocial" aria-label="Sosyal bağlantılar">
+          <a class="social" href="https://osmanesad.medium.com/" target="_blank" rel="noopener" title="Medium"><img src="assets/icons/medium.svg" alt="Medium" /></a>
+          <a class="social" href="https://github.com/osmanesad" target="_blank" rel="noopener" title="GitHub"><img src="assets/icons/github.svg" alt="GitHub" /></a>
+          <a class="social" href="https://www.linkedin.com/in/osmanesad/" target="_blank" rel="noopener" title="LinkedIn"><img src="assets/icons/linkedin.svg" alt="LinkedIn" /></a>
+          <a class="social" href="https://www.instagram.com/masondase/" target="_blank" rel="noopener" title="Instagram"><img src="assets/icons/instagram.svg" alt="Instagram" /></a>
+        </nav>
+      </aside>
 
-    <nav class="timeline" id="timeline" aria-label="Zaman çizelgesi"></nav>
+      <main class="siteMain">
+        <div class="topTools">
+          <button class="toolIcon" id="themeToggle" type="button" aria-label="Tema değiştir" title="Tema değiştir">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 13.1A7.5 7.5 0 0 1 10.9 3a8.8 8.8 0 1 0 10.1 10.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /></svg>
+          </button>
+        </div>
+        <div class="pageWrap">
+          <header class="subpageHero">
+            <div>
+              <div class="eyebrow">Pera defteri</div>
+              <h1 class="pageTitle">Yazılar</h1>
+              <p class="pageLead">Kahve, yazılım, anlam arayışı, marka ve küçük sistemler üzerine notlar. Yeni olan eskiden önce gelir; istersen yıllara bölünmüş çizgiden de gezebilirsin.</p>
+              <nav class="timeline" id="timeline" aria-label="Zaman çizelgesi"></nav>
+            </div>
+            <img src="assets/art/galata-map.svg" alt="Galata ve Karaköy soyut haritası" />
+          </header>
 
-    <div class="archiveControls">
-      <input id="q" class="archiveSearch" type="search" placeholder="Başlık içinde ara…" />
-      <button class="asideBtn" id="clear">Temizle</button>
+          <div class="archiveControls">
+            <input id="q" class="archiveSearch" type="search" placeholder="Başlık içinde ara..." />
+            <button class="asideBtn" id="clear" type="button">Temizle</button>
+            <span class="muted" id="countLine">Yükleniyor...</span>
+          </div>
+
+          <ul class="archiveList2" id="list"></ul>
+        </div>
+      </main>
     </div>
-
-    <ul class="archiveList2" id="list"></ul>
-  </main>
-
-  <script type="module" src="archive.js"></script>
-  <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
-
-</body>
+    <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
+    <script type="module" src="archive.js"></script>
+  </body>
 </html>

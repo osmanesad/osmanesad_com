@@ -1,131 +1,163 @@
-// Kodlar sayfası: GitHub'dan public repoları çekip listeler.
-// Not: GitHub API token kullanmıyoruz (rate limit düşük). Repo sayın ~60 ise sorun yaşamaz.
+const USERNAME = 'osmanesad';
+const MAX_REPOS = 60;
+const HIDE_FORKS = true;
+const HIDE_ARCHIVED = true;
 
-const USERNAME = "osmanesad";
-const MAX_REPOS = 60;            // 60 altına çekmek için
-const HIDE_FORKS = true;         // fork'ları gizle
-const HIDE_ARCHIVED = true;      // archived repo'ları gizle
-
-const listEl = document.getElementById("list");
-const qEl = document.getElementById("q");
-const countEl = document.getElementById("countLine");
+const listEl = document.getElementById('list');
+const qEl = document.getElementById('q');
+const countEl = document.getElementById('countLine');
+const clearBtn = document.getElementById('clear');
+const themeToggle = document.getElementById('themeToggle');
+const toTopBtn = document.getElementById('toTop');
 
 let WORK = [];
 
-function safe(t){ return (t || "").toString(); }
-function repoUrl(full){ return `https://github.com/${full}`; }
+function setTheme(name) {
+  document.body.classList.toggle('theme-dark', name === 'dark');
+  try {
+    localStorage.setItem('site_theme', name);
+  } catch (_) {}
+}
 
-function render(items){
-  listEl.innerHTML = "";
-  items.forEach(r => {
-    const li = document.createElement("li");
-    li.className = "archiveItem";
+function safe(value) {
+  return (value || '').toString();
+}
 
-    const title = safe(r.name);
-    const desc  = safe(r.description || "");
-    const lang  = safe(r.language || "");
+function repoUrl(fullName) {
+  return `https://github.com/${fullName}`;
+}
 
-    // küçük meta satırı
+function fmtUpdated(value) {
+  if (!value) return '';
+  try {
+    return new Date(value).toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit'
+    });
+  } catch {
+    return value;
+  }
+}
+
+function render(items) {
+  listEl.innerHTML = '';
+
+  items.forEach((repo) => {
+    const li = document.createElement('li');
+    li.className = 'archiveItem';
+
+    const date = document.createElement('div');
+    date.className = 'd';
+    date.textContent = fmtUpdated(repo.pushed_at) || 'Güncel';
+
+    const content = document.createElement('div');
+    const link = document.createElement('a');
+    link.href = repoUrl(repo.full_name);
+    link.target = '_blank';
+    link.rel = 'noopener';
+
+    const title = document.createElement('div');
+    title.className = 't';
+    title.textContent = safe(repo.name);
+
+    const desc = document.createElement('div');
+    desc.className = 'e';
+    desc.textContent = safe(repo.description) || 'Açıklama yok.';
+
     const metaBits = [];
-    if(lang) metaBits.push(lang);
-    if(r.stargazers_count) metaBits.push(`★ ${r.stargazers_count}`);
-    if(r.forks_count) metaBits.push(`⑂ ${r.forks_count}`);
-    const meta = metaBits.join(" · ");
+    if (repo.language) metaBits.push(repo.language);
+    if (repo.stargazers_count) metaBits.push(`star ${repo.stargazers_count}`);
+    if (repo.forks_count) metaBits.push(`fork ${repo.forks_count}`);
 
-    const link = document.createElement("a");
-    link.href = repoUrl(r.full_name);
-    link.target = "_blank";
-    link.rel = "noopener";
+    const meta = document.createElement('div');
+    meta.className = 'projectMeta';
+    meta.textContent = metaBits.join(' · ') || 'Detay yok.';
 
-    const titleEl = document.createElement("div");
-    titleEl.className = "t";
-    titleEl.textContent = title;
-    link.appendChild(titleEl);
-
-    const descEl = document.createElement("div");
-    descEl.className = "e";
-    descEl.textContent = desc || "Açıklama yok.";
-
-    const metaEl = document.createElement("div");
-    metaEl.className = "d";
-    metaEl.textContent = meta || "Detay yok.";
-
-    li.append(link, descEl, metaEl);
+    link.appendChild(title);
+    content.append(link, desc, meta);
+    li.append(date, content);
     listEl.appendChild(li);
   });
 
-  countEl.textContent = `${items.length} repo · yeni → eski`;
+  countEl.textContent = `${items.length} repo · yeni -> eski`;
 }
 
-function applyFilter(){
-  const q = (qEl.value || "").trim().toLowerCase();
-  if(!q) return render(WORK);
+function applyFilter() {
+  const query = (qEl.value || '').trim().toLowerCase();
+  if (!query) {
+    render(WORK);
+    return;
+  }
 
-  const filtered = WORK.filter(r => {
-    const hay = [
-      r.name, r.full_name, r.description, r.language
-    ].map(safe).join(" ").toLowerCase();
-    return hay.includes(q);
-  });
-
-  render(filtered);
+  render(
+    WORK.filter((repo) =>
+      [repo.name, repo.full_name, repo.description, repo.language]
+        .map(safe)
+        .join(' ')
+        .toLowerCase()
+        .includes(query)
+    )
+  );
 }
 
-document.getElementById("clear").addEventListener("click", () => {
-  qEl.value = "";
-  applyFilter();
-  qEl.focus();
-});
-qEl.addEventListener("input", applyFilter);
-
-async function fetchAllRepos(username){
+async function fetchAllRepos(username) {
   const all = [];
   let page = 1;
 
-  while(true){
+  while (true) {
     const url = `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=pushed`;
-    const res = await fetch(url, { headers: { "Accept": "application/vnd.github+json" } });
+    const response = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
+    if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
 
-    if(!res.ok){
-      throw new Error(`GitHub API error: ${res.status}`);
-    }
-
-    const data = await res.json();
+    const data = await response.json();
     all.push(...(data || []));
-
-    if((data || []).length < 100) break;
-    page++;
+    if ((data || []).length < 100) break;
+    page += 1;
   }
 
   return all;
 }
 
-async function load(){
-  try{
-    countEl.textContent = "Yükleniyor…";
-
+async function load() {
+  try {
+    countEl.textContent = 'Yükleniyor...';
     const repos = await fetchAllRepos(USERNAME);
-
     WORK = repos
-      .filter(r => !HIDE_FORKS || !r.fork)
-      .filter(r => !HIDE_ARCHIVED || !r.archived)
-      .sort((a,b) => (b.pushed_at || "").localeCompare(a.pushed_at || ""))
+      .filter((repo) => !HIDE_FORKS || !repo.fork)
+      .filter((repo) => !HIDE_ARCHIVED || !repo.archived)
+      .sort((a, b) => (b.pushed_at || '').localeCompare(a.pushed_at || ''))
       .slice(0, MAX_REPOS);
 
     render(WORK);
-  } catch(e){
-    console.error(e);
-    countEl.textContent = "Repo listesi yüklenemedi.";
+  } catch (error) {
+    console.error(error);
+    countEl.textContent = 'Repo listesi yüklenemedi.';
   }
 }
 
-load();
+let savedTheme = 'light';
+try {
+  savedTheme = localStorage.getItem('site_theme') || 'light';
+} catch (_) {}
+setTheme(savedTheme);
 
-// --- Scroll to top ---
-const toTopBtn = document.getElementById("toTop");
-if(toTopBtn){
-  const toggle = () => toTopBtn.classList.toggle("show", window.scrollY > 500);
-  window.addEventListener("scroll", toggle, { passive: true });
+themeToggle?.addEventListener('click', () => {
+  setTheme(document.body.classList.contains('theme-dark') ? 'light' : 'dark');
+});
+
+clearBtn?.addEventListener('click', () => {
+  qEl.value = '';
+  applyFilter();
+  qEl.focus();
+});
+qEl?.addEventListener('input', applyFilter);
+
+if (toTopBtn) {
+  const toggle = () => toTopBtn.classList.toggle('show', window.scrollY > 500);
+  window.addEventListener('scroll', toggle, { passive: true });
   toggle();
-  toTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
+
+load();

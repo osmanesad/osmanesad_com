@@ -1,144 +1,159 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const SUPABASE_URL = "https://zefzcmrsdvtbliguqedi.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb";
+const SUPABASE_URL = 'https://zefzcmrsdvtbliguqedi.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_vGfAuyo4h18I-Pqmt25N0Q_OkEtlazb';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function fmtDate(iso) {
-  if(!iso) return '';
-  try{
-    const d = new Date(iso + 'T00:00:00');
-    return d.toLocaleDateString('tr-TR', { year:'numeric', month:'long', day:'numeric' });
-  } catch { return iso; }
+const listEl = document.getElementById('list');
+const qEl = document.getElementById('q');
+const countEl = document.getElementById('countLine');
+const timelineEl = document.getElementById('timeline');
+const clearBtn = document.getElementById('clear');
+const themeToggle = document.getElementById('themeToggle');
+const toTopBtn = document.getElementById('toTop');
+
+let POSTS = [];
+
+function setTheme(name) {
+  document.body.classList.toggle('theme-dark', name === 'dark');
+  try {
+    localStorage.setItem('site_theme', name);
+  } catch (_) {}
 }
 
-let POSTS=[];
-const listEl=document.getElementById('list');
-const qEl=document.getElementById('q');
-const countEl=document.getElementById('countLine');
-const timelineEl=document.getElementById('timeline');
+function fmtDate(iso) {
+  if (!iso) return '';
+  try {
+    return new Date(`${iso}T00:00:00`).toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit'
+    });
+  } catch {
+    return iso;
+  }
+}
 
-function buildTimeline(posts){
-  if(!timelineEl) return;
+function stripHtml(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html || '';
+  return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+}
 
-  const years = [...new Set(
-    posts.map(p => (p.date || '').slice(0,4)).filter(Boolean)
-  )];
-
+function buildTimeline(posts) {
+  if (!timelineEl) return;
+  const years = [...new Set(posts.map((post) => (post.date || '').slice(0, 4)).filter(Boolean))];
   timelineEl.innerHTML = '';
 
-  years.forEach(year => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = year;
-
-    btn.addEventListener('click', () => {
-      const target = document.querySelector(`[data-year-anchor="${year}"]`);
-      if(target){
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  years.forEach((year) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = year;
+    button.addEventListener('click', () => {
+      document.querySelector(`[data-year-anchor="${year}"]`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     });
-
-    timelineEl.appendChild(btn);
+    timelineEl.appendChild(button);
   });
 }
 
-function render(items){
-  listEl.innerHTML='';
-
-  // Her yıl için sadece ilk görülen elemana anchor koyuyoruz (scroll bununla garanti çalışır)
+function render(items) {
+  listEl.innerHTML = '';
   const anchoredYears = new Set();
 
-  items.forEach(p=>{
-    const year = (p.date || '').slice(0,4);
-
-    const li=document.createElement('li');
-    li.className='archiveItem';
-
-    if(year && !anchoredYears.has(year)){
+  items.forEach((post) => {
+    const year = (post.date || '').slice(0, 4);
+    const li = document.createElement('li');
+    li.className = 'archiveItem';
+    if (year && !anchoredYears.has(year)) {
       li.setAttribute('data-year-anchor', year);
       anchoredYears.add(year);
     }
 
+    const date = document.createElement('div');
+    date.className = 'd';
+    date.textContent = fmtDate(post.date);
+
+    const content = document.createElement('div');
     const link = document.createElement('a');
-    link.href = `index.html#${p.id}`;
+    link.href = `index.html#${post.id}`;
 
     const title = document.createElement('div');
     title.className = 't';
-    title.textContent = p.title;
-    link.appendChild(title);
+    title.textContent = post.title;
 
     const excerpt = document.createElement('div');
     excerpt.className = 'e';
-    excerpt.textContent = p.excerpt || '';
+    excerpt.textContent = post.excerpt || '';
 
-    const date = document.createElement('div');
-    date.className = 'd';
-    date.textContent = fmtDate(p.date);
-
-    li.append(link, excerpt, date);
+    link.appendChild(title);
+    content.append(link, excerpt);
+    li.append(date, content);
     listEl.appendChild(li);
   });
 
-  countEl.textContent = items.length + ' yazı · yeni → eski';
+  countEl.textContent = `${items.length} yazı · yeni -> eski`;
 }
 
-function applyFilter(){
-  const q=(qEl.value||'').trim().toLowerCase();
-  if(!q) return render(POSTS);
-  const filtered=POSTS.filter(p => (p.title||'').toLowerCase().includes(q));
-  render(filtered);
-}
-
-document.getElementById('clear').addEventListener('click',()=>{ qEl.value=''; applyFilter(); qEl.focus(); });
-qEl.addEventListener('input', applyFilter);
-
-function stripHtml(html) {
-  const div = document.createElement("div");
-  div.innerHTML = html || "";
-  return (div.textContent || div.innerText || "").replace(/\s+/g, " ").trim();
+function applyFilter() {
+  const query = (qEl.value || '').trim().toLowerCase();
+  if (!query) {
+    render(POSTS);
+    return;
+  }
+  render(POSTS.filter((post) => (post.title || '').toLowerCase().includes(query)));
 }
 
 async function loadArchive() {
   try {
-    countEl.textContent = "Yükleniyor…";
-
+    countEl.textContent = 'Yükleniyor...';
     const { data, error } = await supabase
-      .from("posts")
-      .select("id,title,date,content_html,status")
-      .eq("status", "published")
-      .order("date", { ascending: false });
+      .from('posts')
+      .select('id,title,date,content_html,status')
+      .eq('status', 'published')
+      .order('date', { ascending: false });
 
     if (error) throw error;
 
-    POSTS = (data || []).map(p => ({
-      id: p.id,
-      title: p.title,
-      date: p.date,
-      excerpt: stripHtml(p.content_html).slice(0, 160) // kısa özet
+    POSTS = (data || []).map((post) => ({
+      id: post.id,
+      title: post.title,
+      date: post.date,
+      excerpt: stripHtml(post.content_html).slice(0, 170)
     }));
 
     buildTimeline(POSTS);
     render(POSTS);
-  } catch (e) {
-    console.error(e);
-    countEl.textContent = "Arşiv yüklenemedi (Supabase hatası).";
+  } catch (error) {
+    console.error(error);
+    countEl.textContent = 'Arşiv yüklenemedi.';
   }
 }
 
-loadArchive();
+let savedTheme = 'light';
+try {
+  savedTheme = localStorage.getItem('site_theme') || 'light';
+} catch (_) {}
+setTheme(savedTheme);
 
+themeToggle?.addEventListener('click', () => {
+  setTheme(document.body.classList.contains('theme-dark') ? 'light' : 'dark');
+});
 
-  // --- Scroll to top (Archive) ---
-const toTopBtn = document.getElementById('toTop');
-if(toTopBtn){
-  const toggle = () => {
-    toTopBtn.classList.toggle('show', window.scrollY > 500);
-  };
+clearBtn?.addEventListener('click', () => {
+  qEl.value = '';
+  applyFilter();
+  qEl.focus();
+});
+qEl?.addEventListener('input', applyFilter);
+
+if (toTopBtn) {
+  const toggle = () => toTopBtn.classList.toggle('show', window.scrollY > 500);
   window.addEventListener('scroll', toggle, { passive: true });
   toggle();
-
-  toTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
+
+loadArchive();
