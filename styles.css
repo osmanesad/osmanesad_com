@@ -869,3 +869,102 @@ body.theme-dark .social img {
     color: #000 !important;
   }
 }
+
+/* Osman Esad link + visual polish pass */
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  align-items: center;
+}
+
+.mutedArrow {
+  color: var(--muted);
+}
+
+.linkConstellation {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 520px;
+}
+
+.linkConstellation a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  background: rgba(255, 253, 248, .44);
+}
+
+.linkConstellation a:hover {
+  color: var(--text);
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+
+body.theme-dark .linkConstellation a {
+  background: rgba(255,255,255,.03);
+}
+
+.railSocial {
+  gap: 10px;
+}
+
+.social {
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.social:hover {
+  transform: translateY(-1px);
+}
+
+.heroArt::before {
+  content: "";
+  position: absolute;
+  inset: 7% 5% auto auto;
+  width: 210px;
+  height: 210px;
+  border: 1px solid rgba(184,132,52,.18);
+  border-radius: 999px;
+  z-index: -1;
+}
+
+.heroArt::after {
+  content: "PERA / GALATA";
+  position: absolute;
+  right: 5%;
+  bottom: 9%;
+  color: var(--muted);
+  letter-spacing: .32em;
+  font-size: 10px;
+  transform: rotate(-5deg);
+}
+
+.subpageHero img,
+.quoteBand img,
+.miniMap img,
+.railSketch,
+.heroArt img {
+  mix-blend-mode: multiply;
+}
+
+body.theme-dark .subpageHero img,
+body.theme-dark .quoteBand img,
+body.theme-dark .miniMap img,
+body.theme-dark .railSketch,
+body.theme-dark .heroArt img {
+  filter: invert(.92) sepia(.18) saturate(.8) hue-rotate(345deg);
+  mix-blend-mode: screen;
+  opacity: .88;
+}
+
+@media (max-width: 700px) {
+  .linkConstellation { gap: 6px; }
+  .linkConstellation a { font-size: 10px; padding: 5px 10px; }
+}

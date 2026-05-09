@@ -1,29 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 250" role="img" aria-labelledby="title">
-  <title id="title">Kod, taç ve dışavurumcu portre lekesi</title>
+  <title id="title">Taç, kod ve ham sanat çizgileri</title>
   <rect width="420" height="250" fill="none"/>
-  <g opacity=".92">
-    <path d="M155 124c48-23 108-5 152-25l12 54c-55 28-112 10-165 32l1-61Z" fill="#163d67"/>
-    <path d="M134 160c62 8 125-13 196-5l5 30c-84 4-131 30-206 12l5-37Z" fill="#d9ad55" opacity=".42"/>
+  <g opacity=".16" stroke="#111" fill="none" stroke-width="1.1">
+    <path d="M26 196c102-28 221-27 365-16M58 139c97 18 197-13 318 3M92 84c92 12 174 2 260-23"/>
+    <path d="M192 30v193M270 20v202M324 64v135"/>
   </g>
-  <g stroke="#111" stroke-width="1.2" fill="none" opacity=".45">
-    <path d="M24 197c107-23 221-30 357-18M56 138c93 16 203-17 321 4M89 84c97 13 179 2 265-23"/>
-    <path d="M192 28v198M270 14v206M324 62v135"/>
+  <path d="M147 122c51-24 112-6 161-27l11 49c-56 28-115 8-171 30l-1-52Z" fill="#163d67" opacity=".86"/>
+  <path d="M135 160c64 8 127-13 198-5l5 25c-82 5-130 27-207 12l4-32Z" fill="#d9ad55" opacity=".45"/>
+  <g transform="translate(78 70)">
+    <path d="M82 45c33 0 60 27 60 62 0 38-28 65-62 65-38 0-65-30-64-68 1-35 31-59 66-59Z" fill="#111" opacity=".95"/>
+    <path d="M36 88c19-35 79-36 96-4 13 24 5 55-17 71-18 13-51 12-71-1-23-16-25-41-8-66Z" fill="#d9ad55" opacity=".88"/>
+    <path d="M50 96c10-15 33-14 42 1 7 14-2 30-20 32-19 2-32-17-22-33ZM99 93c11-14 32-12 39 2 8 14-1 29-18 31-18 1-31-18-21-33Z" fill="#f8f5ee"/>
+    <circle cx="73" cy="112" r="6" fill="#111"/>
+    <circle cx="121" cy="109" r="6" fill="#111"/>
+    <path d="M79 138c16 10 38 8 53-4" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+    <path d="M60 155h70M68 168h55" stroke="#111" stroke-width="3"/>
+    <path d="M43 48 63 4l29 39 30-38 19 47" fill="none" stroke="#111" stroke-width="7" stroke-linejoin="round"/>
   </g>
-  <g transform="translate(72 70)">
-    <path d="M85 37c36 0 66 31 66 70 0 42-30 72-68 72-42 0-72-33-71-75C13 65 46 37 85 37Z" fill="#111"/>
-    <path d="M32 85c20-41 88-43 107-6 14 27 6 62-18 80-19 15-56 14-78-1-27-18-29-46-11-73Z" fill="#d9ad55" opacity=".9"/>
-    <path d="M45 92c12-18 38-17 48 1 9 17-2 36-22 38-23 3-39-20-26-39ZM100 88c12-16 36-14 45 2 9 17-2 35-21 36-21 2-36-21-24-38Z" fill="#f8f5ee"/>
-    <circle cx="70" cy="111" r="8" fill="#111"/>
-    <circle cx="124" cy="108" r="8" fill="#111"/>
-    <path d="M78 139c17 12 42 9 58-4" fill="none" stroke="#111" stroke-width="5" stroke-linecap="round"/>
-    <path d="M57 157h76M65 171h58" stroke="#111" stroke-width="4"/>
-    <path d="M41 48 62 0l31 43 31-42 20 50" fill="none" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
-  </g>
-  <g stroke="#111" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M274 57 298 20l23 36 35-35 15 56-97-20Z"/>
+  <g stroke="#111" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M284 58 306 23l22 34 33-33 14 53-91-19Z"/>
   </g>
   <g fill="none" stroke="#111" stroke-width="2" opacity=".85">
-    <path d="M33 49 12 70l21 20M73 49l21 21-21 20"/>
-    <path d="M332 106h40M350 86v40M296 207c17-16 44-16 62 0"/>
+    <path d="M35 52 15 71l20 19M73 52l20 19-20 19"/>
+    <path d="M334 108h39M352 89v38"/>
   </g>
 </svg>
