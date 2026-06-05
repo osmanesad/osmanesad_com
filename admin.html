@@ -1,268 +1,259 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex">
-  <title>Admin · Yazılar</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Admin - Yazılar</title>
 
-  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
-  <style>
-    :root {
-      --bg: #f7f4ef;
-      --panel: #fffdf9;
-      --text: #181512;
-      --muted: #776f66;
-      --line: #e3ded6;
-      --soft: #f0ebe3;
-      --ok: #0b7a53;
-      --danger: #a5162f;
-      --radius: 18px;
-    }
+    <style>
+      :root {
+        --bg: #f7f6f2;
+        --panel: #fffefa;
+        --text: #111111;
+        --muted: #64615a;
+        --line: #d8d3c8;
+        --soft: #efede7;
+        --ok: #0b6b4f;
+        --danger: #9d1f2b;
+        --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+        --serif: "New York", "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+      }
 
-    * { box-sizing: border-box; }
+      * { box-sizing: border-box; }
 
-    body {
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-      margin: 0;
-      color: var(--text);
-      background: var(--bg);
-      padding: 24px;
-    }
+      body {
+        margin: 0;
+        color: var(--text);
+        background: var(--bg);
+        font-family: var(--sans);
+        padding: 24px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
 
-    .shell { max-width: 1180px; margin: 0 auto; }
+      .shell { max-width: 1180px; margin: 0 auto; }
 
-    .top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
+      .top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+        padding-bottom: 18px;
+        border-bottom: 3px double var(--text);
+      }
 
-    h1, h2 { margin: 0; letter-spacing: -0.03em; }
-    h1 { font-size: clamp(32px, 5vw, 54px); font-weight: 500; }
-    h2 { font-size: 22px; font-weight: 500; }
+      h1, h2 { margin: 0; }
+      h1 { font-family: var(--serif); font-size: clamp(34px, 5vw, 58px); line-height: 1; }
+      h2 { font-family: var(--serif); font-size: 24px; }
 
-    .muted { color: var(--muted); font-size: 14px; }
-    code { background: var(--soft); padding: 2px 7px; border-radius: 999px; }
+      .muted { color: var(--muted); font-size: 14px; }
+      code { background: var(--soft); padding: 2px 7px; border-radius: 999px; }
 
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: 0 16px 40px rgba(30, 22, 10, .045);
-    }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 18px;
+      }
 
-    .grid { display: grid; grid-template-columns: 1.45fr .85fr; gap: 18px; align-items: start; }
-    .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .row.four { grid-template-columns: 1.1fr 1.4fr .8fr .7fr; }
+      .grid { display: grid; grid-template-columns: 1.45fr .85fr; gap: 18px; align-items: start; }
+      .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .row.four { grid-template-columns: 1.1fr 1.4fr .8fr .7fr; }
 
-    input, select, button {
-      width: 100%;
-      font: inherit;
-      padding: 11px 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #fff;
-      color: var(--text);
-    }
+      input, select, button {
+        width: 100%;
+        font: inherit;
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        background: #fff;
+        color: var(--text);
+      }
 
-    button { cursor: pointer; transition: .15s ease; }
-    button:hover { transform: translateY(-1px); }
-    button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+      button { cursor: pointer; transition: .15s ease; }
+      button:hover { background: var(--soft); }
+      button:disabled { opacity: .55; cursor: not-allowed; }
 
-    .bar { display:flex; gap:10px; flex-wrap: wrap; margin: 14px 0; align-items: center; }
-    .bar button { width: auto; }
+      .bar { display:flex; gap:10px; flex-wrap: wrap; margin: 14px 0; align-items: center; }
+      .bar button { width: auto; }
 
-    .ok { background: var(--ok); color: #fff; border-color: var(--ok); }
-    .danger { background: var(--danger); color: #fff; border-color: var(--danger); }
-    .ghost { background: transparent; border-color: #cfc7bc; }
+      .ok { background: var(--ok); color: #fff; border-color: var(--ok); }
+      .danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+      .ghost { background: transparent; border-color: var(--line); }
 
-    #editorWrap {
-      margin-top: 14px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: #fff;
-    }
+      #editorWrap {
+        margin-top: 14px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+        background: #fff;
+      }
 
-    #toolbar {
-      border: 0;
-      border-bottom: 1px solid var(--line);
-      background: #fbfaf7;
-      position: sticky;
-      top: 0;
-      z-index: 3;
-    }
+      #toolbar {
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: #fbfaf7;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+      }
 
-    #editor {
-      min-height: 520px;
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-      font-size: 20px;
-      line-height: 1.78;
-    }
+      #editor {
+        min-height: 520px;
+        font-family: var(--sans);
+        font-size: 18px;
+        line-height: 1.78;
+      }
 
-    .ql-editor { padding: 28px; }
-    .ql-editor h1, .ql-editor h2, .ql-editor h3 { font-weight: 500; line-height: 1.2; }
-    .ql-editor p { margin-bottom: 1em; }
+      .ql-editor { padding: 28px; }
+      .ql-editor h1, .ql-editor h2, .ql-editor h3 {
+        font-family: var(--serif);
+        line-height: 1.2;
+      }
+      .ql-editor p { margin-bottom: 1em; }
 
-    .toolsLine {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
+      .toolsLine {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
 
-    .preview {
-      display: none;
-      margin-top: 14px;
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: #fff;
-      font-size: 20px;
-      line-height: 1.78;
-    }
+      .preview {
+        display: none;
+        margin-top: 14px;
+        padding: 28px;
+        border: 1px solid var(--line);
+        background: #fff;
+        font-size: 18px;
+        line-height: 1.78;
+      }
 
-    .preview.show { display: block; }
-    .preview h1, .preview h2, .preview h3 { font-weight: 500; line-height: 1.2; }
-    .preview p { margin: 0 0 1.1em; }
-    .preview blockquote { margin: 1.4em 0; padding-left: 1em; border-left: 3px solid var(--line); color: #514942; }
-    .preview img { max-width: 100%; height: auto; border-radius: 14px; }
+      .preview.show { display: block; }
+      .preview h1, .preview h2, .preview h3 { font-family: var(--serif); line-height: 1.2; }
+      .preview p { margin: 0 0 1.1em; }
+      .preview blockquote { margin: 1.4em 0; padding-left: 1em; border-left: 2px solid var(--line); color: #514942; }
+      .preview img { max-width: 100%; height: auto; }
 
-    .list { display: grid; gap: 8px; margin-top: 14px; }
-    .item {
-      display:flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #fff;
-    }
-    .item button { padding: 7px 10px; width: auto; }
+      .list { display: grid; gap: 8px; margin-top: 14px; }
+      .item {
+        display:flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      .item button { padding: 7px 10px; width: auto; }
 
-    .statusDot {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .statusDot::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #b8aea2;
-    }
-    .statusDot.published::before { background: var(--ok); }
+      .statusDot { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+      .statusDot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #b8aea2; }
+      .statusDot.published::before { background: var(--ok); }
 
-    @media (max-width: 900px) {
-      body { padding: 14px; }
-      .grid, .row, .row.four { grid-template-columns: 1fr; }
-      .top { display: block; }
-      #editor { min-height: 420px; font-size: 18px; }
-      .ql-editor, .preview { padding: 18px; }
-    }
-  </style>
-</head>
-<body>
-  <main class="shell">
-    <section class="top">
-      <div>
-        <h1>Admin</h1>
-        <p class="muted">Yazıyı burada temiz HTML olarak kaydeder. Supabase’e giden içerik sitede daha düzgün görünür.</p>
-      </div>
-      <p class="muted">Admin: <code>byesad@gmail.com</code></p>
-    </section>
-
-    <section class="card" id="authBox">
-      <div class="row">
-        <input id="email" type="email" placeholder="E-posta" value="byesad@gmail.com" autocomplete="username" />
-        <input id="password" type="password" placeholder="Şifre" autocomplete="current-password" />
-      </div>
-      <div class="bar">
-        <button id="loginBtn" class="ok">Giriş</button>
-        <button id="logoutBtn" class="ghost" style="display:none;">Çıkış</button>
-        <span id="authStatus" class="muted"></span>
-      </div>
-    </section>
-
-    <div class="grid" style="margin-top:18px;">
-      <section class="card">
-        <h2>Yazı Düzenle / Yeni Yazı</h2>
-
-        <div class="row four" style="margin-top:14px;">
-          <input id="id" placeholder="id / slug örn: cinnet" />
-          <input id="title" placeholder="Başlık" />
-          <input id="date" type="date" />
-          <select id="type">
-            <option value="note">note</option>
-            <option value="essay">essay</option>
-            <option value="log">log</option>
-          </select>
+      @media (max-width: 900px) {
+        body { padding: 14px; }
+        .grid, .row, .row.four { grid-template-columns: 1fr; }
+        .top { display: block; }
+        #editor { min-height: 420px; font-size: 17px; }
+        .ql-editor, .preview { padding: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="top">
+        <div>
+          <h1>Admin</h1>
+          <p class="muted">Yazıyı burada temiz HTML olarak kaydeder. Supabase'e giden içerik sitede sade okuma düzeniyle görünür.</p>
         </div>
-
-        <div class="bar">
-          <button id="saveDraftBtn" class="ghost">Taslak Kaydet</button>
-          <button id="publishBtn" class="ok">Yayınla</button>
-          <button id="unpublishBtn" class="ghost">Taslağa Al</button>
-          <button id="deleteBtn" class="danger">Sil</button>
-          <button id="newBtn" class="ghost">Yeni Yazı</button>
-        </div>
-
-        <div id="editorWrap">
-          <div id="toolbar">
-            <span class="ql-formats">
-              <select class="ql-header">
-                <option selected></option>
-                <option value="2">Başlık</option>
-                <option value="3">Alt başlık</option>
-              </select>
-            </span>
-            <span class="ql-formats">
-              <button class="ql-bold"></button>
-              <button class="ql-italic"></button>
-              <button class="ql-underline"></button>
-            </span>
-            <span class="ql-formats">
-              <button class="ql-blockquote"></button>
-              <button class="ql-link"></button>
-            </span>
-            <span class="ql-formats">
-              <button class="ql-list" value="ordered"></button>
-              <button class="ql-list" value="bullet"></button>
-            </span>
-            <span class="ql-formats">
-              <select class="ql-align"></select>
-              <button class="ql-clean"></button>
-            </span>
-          </div>
-          <div id="editor"></div>
-        </div>
-
-        <div class="toolsLine">
-          <span id="msg" class="muted"></span>
-          <span id="counter" class="muted">0 kelime</span>
-          <button id="previewBtn" class="ghost" type="button">Önizleme</button>
-        </div>
-
-        <article id="preview" class="preview"></article>
+        <p class="muted">Admin: <code>byesad@gmail.com</code></p>
       </section>
 
-      <aside class="card">
-        <h2>Yazılar</h2>
-        <div id="postsList" class="list muted">Yükleniyor…</div>
-      </aside>
-    </div>
-  </main>
+      <section class="card" id="authBox">
+        <div class="row">
+          <input id="email" type="email" placeholder="E-posta" value="byesad@gmail.com" autocomplete="username" />
+          <input id="password" type="password" placeholder="Şifre" autocomplete="current-password" />
+        </div>
+        <div class="bar">
+          <button id="loginBtn" class="ok">Giriş</button>
+          <button id="logoutBtn" class="ghost" style="display:none;">Çıkış</button>
+          <span id="authStatus" class="muted"></span>
+        </div>
+      </section>
 
-  <script type="module" src="./admin.js"></script>
-</body>
+      <div class="grid" style="margin-top:18px;">
+        <section class="card">
+          <h2>Yazı Düzenle / Yeni Yazı</h2>
+
+          <div class="row four" style="margin-top:14px;">
+            <input id="id" placeholder="id / slug örn: cinnet" />
+            <input id="title" placeholder="Başlık" />
+            <input id="date" type="date" />
+            <select id="type">
+              <option value="note">note</option>
+              <option value="essay">essay</option>
+              <option value="log">log</option>
+            </select>
+          </div>
+
+          <div class="bar">
+            <button id="saveDraftBtn" class="ghost">Taslak Kaydet</button>
+            <button id="publishBtn" class="ok">Yayınla</button>
+            <button id="unpublishBtn" class="ghost">Taslağa Al</button>
+            <button id="deleteBtn" class="danger">Sil</button>
+            <button id="newBtn" class="ghost">Yeni Yazı</button>
+          </div>
+
+          <div id="editorWrap">
+            <div id="toolbar">
+              <span class="ql-formats">
+                <select class="ql-header">
+                  <option selected></option>
+                  <option value="2">Başlık</option>
+                  <option value="3">Alt başlık</option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-blockquote"></button>
+                <button class="ql-link"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-align"></select>
+                <button class="ql-clean"></button>
+              </span>
+            </div>
+            <div id="editor"></div>
+          </div>
+
+          <div class="toolsLine">
+            <span id="msg" class="muted"></span>
+            <span id="counter" class="muted">0 kelime</span>
+            <button id="previewBtn" class="ghost" type="button">Önizleme</button>
+          </div>
+
+          <article id="preview" class="preview"></article>
+        </section>
+
+        <aside class="card">
+          <h2>Yazılar</h2>
+          <div id="postsList" class="list muted">Yükleniyor...</div>
+        </aside>
+      </div>
+    </main>
+
+    <script type="module" src="./admin.js"></script>
+  </body>
 </html>

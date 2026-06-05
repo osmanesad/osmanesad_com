@@ -131,7 +131,7 @@ function handleHash() {
   const id = decodeURIComponent(location.hash.replace('#', '').trim());
   if (!id) {
     if (readerShell) readerShell.hidden = true;
-    document.title = 'Osman Esad - Yazılar, Kodlar, Pera';
+    document.title = 'Osman Esad - Yazılar, projeler, notlar';
     return;
   }
 

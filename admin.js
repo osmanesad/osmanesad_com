@@ -174,7 +174,7 @@ async function upsertPost(statusOverride) {
     const post = currentFormPost(statusOverride);
     const { error } = await supabase.from("posts").upsert(post, { onConflict: "id" });
     if (error) throw error;
-    setMsg(statusOverride === "published" ? "Yayınlandı ✅" : "Taslak kaydedildi ✅");
+    setMsg(statusOverride === "published" ? "Yayınlandı." : "Taslak kaydedildi.");
     await loadPosts();
   } catch (error) {
     setMsg("Hata: " + (error?.message || error));
@@ -191,7 +191,7 @@ async function setStatus(status) {
       .update({ status, updated_at: new Date().toISOString() })
       .eq("id", id);
     if (error) throw error;
-    setMsg(status === "published" ? "Yayınlandı ✅" : "Taslağa alındı ✅");
+    setMsg(status === "published" ? "Yayınlandı." : "Taslağa alındı.");
     await loadPosts();
   } catch (error) {
     setMsg("Hata: " + (error?.message || error));
@@ -207,7 +207,7 @@ async function deletePost() {
     const { error } = await supabase.from("posts").delete().eq("id", id);
     if (error) throw error;
     clearForm();
-    setMsg("Silindi ✅");
+    setMsg("Silindi.");
     await loadPosts();
   } catch (error) {
     setMsg("Hata: " + (error?.message || error));
@@ -239,7 +239,7 @@ function clearForm() {
 }
 
 async function loadPosts() {
-  postsList.textContent = "Yükleniyor…";
+  postsList.textContent = "Yükleniyor...";
   const { data, error } = await supabase
     .from("posts")
     .select("id,title,date,status,type,updated_at")
