@@ -4,136 +4,119 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="./triquetra.png" type="image/x-icon" />
-    <title>Osman Esad - Yazılar, projeler, notlar</title>
+    <title>Osman Esad - Notlar</title>
     <meta
       name="description"
-      content="Osman Esad'ın yazılarını, projelerini ve sade üretim arşivini okuyabileceğin kişisel yayın sitesi."
+      content="Osman Esad Hoşbak'ın notları, projeleri, CV bilgileri ve iletişim bağlantıları."
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="siteShell">
-      <aside class="siteRail" aria-label="Site menüsü">
-        <div>
-          <div class="railTop">
-            <a class="brand" href="index.html" aria-label="Ana sayfa">Osman Esad</a>
-          </div>
-          <nav class="railNav" aria-label="Ana gezinme">
-            <a href="index.html" aria-current="page">Ana Sayfa</a>
-            <a href="archive.html">Yazılar</a>
-            <a href="projects.html">Projeler</a>
-            <a href="about.html">Hakkımda</a>
-            <a href="mailto:byesad@gmail.com">İletişim</a>
-            <a href="https://dasecoffee.co" target="_blank" rel="noopener">DASE Coffee</a>
-          </nav>
-        </div>
-        <nav class="railSocial" aria-label="Sosyal bağlantılar">
-          <a href="https://osmanesad.medium.com/" target="_blank" rel="noopener">Medium</a>
-          <a href="https://github.com/osmanesad" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://www.linkedin.com/in/osmanesad/" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="https://www.behance.net/osmanesad" target="_blank" rel="noopener">Behance</a>
-          <a href="https://www.instagram.com/masondase/" target="_blank" rel="noopener">Instagram</a>
+    <main class="site">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Ana sayfa">
+          <strong>Osman Esad</strong>
+          <span>Kafe operasyonu / Ürün / Web</span>
+        </a>
+
+        <nav class="mainNav" aria-label="Sayfalar">
+          <a href="index.html" aria-current="page">Notlar</a>
+          <a href="archive.html">Arşiv</a>
+          <a href="projects.html">Projeler</a>
+          <a href="about.html">Hakkımda</a>
         </nav>
-      </aside>
 
-      <main class="siteMain">
-        <div class="topTools" aria-label="Sayfa araçları">
-          <button class="toolIcon" id="themeToggle" type="button" aria-label="Tema değiştir" title="Tema değiştir">Aa</button>
-          <a class="toolIcon" href="archive.html" aria-label="Yazılarda ara" title="Yazılarda ara">Ara</a>
+        <nav class="socialLinks" aria-label="Dış bağlantılar">
+          <a href="https://osmanesad.medium.com/" target="_blank" rel="noopener" title="Medium"><img src="assets/icons/medium.svg" alt="Medium" /></a>
+          <a href="https://github.com/osmanesad" target="_blank" rel="noopener" title="GitHub"><img src="assets/icons/github.svg" alt="GitHub" /></a>
+          <a href="https://www.linkedin.com/in/osmanesad/" target="_blank" rel="noopener" title="LinkedIn"><img src="assets/icons/linkedin.svg" alt="LinkedIn" /></a>
+          <a href="https://www.instagram.com/masondase/" target="_blank" rel="noopener" title="Instagram"><img src="assets/icons/instagram.svg" alt="Instagram" /></a>
+          <a href="https://www.behance.net/osmanesad" target="_blank" rel="noopener" title="Behance"><img src="assets/icons/behance.svg" alt="Behance" /></a>
+          <a href="https://www.artstation.com/masondase" target="_blank" rel="noopener" title="ArtStation"><img src="assets/icons/artstation.svg" alt="ArtStation" /></a>
+          <a href="https://vsco.co/osmanesad/gallery" target="_blank" rel="noopener" title="VSCO"><img src="assets/icons/vsco.svg" alt="VSCO" /></a>
+          <a href="https://youtube.com/@osmanesad?si=cu8vE3Sx6dMPpb2N" target="_blank" rel="noopener" title="YouTube"><img src="assets/icons/youtube.svg" alt="YouTube" /></a>
+          <a href="https://www.pinterest.com/g0324d/" target="_blank" rel="noopener" title="Pinterest"><img src="assets/icons/pinterest.svg" alt="Pinterest" /></a>
+        </nav>
+      </header>
+
+      <section class="intro introCompact">
+        <div>
+          <div class="eyebrow">Kısa not</div>
+          <strong class="introTitle">Yazılar, projeler ve çalışma bilgileri.</strong>
+          <p>
+            Burada yazılarımı, küçük projelerimi ve çalışma bilgilerimi topluyorum. Kafe deneyimi, ürün geliştirme ve web işleri aynı çizgide duruyor.
+          </p>
         </div>
+        <nav class="introLinks" aria-label="Öne çıkan bağlantılar">
+          <a href="archive.html" id="welcomeArchiveMeta">Arşivi aç</a>
+          <a href="projects.html" id="welcomeProjectsMeta">Projeleri gör</a>
+          <a href="mailto:byesad@gmail.com">byesad@gmail.com</a>
+        </nav>
+      </section>
 
-        <div class="pageWrap">
-          <section class="hero" aria-labelledby="heroTitle">
-            <div class="editionLine">
-              <span>Kişisel Gazete</span>
-              <span>İstanbul</span>
-              <span>2026</span>
-            </div>
-            <h1 class="heroTitle" id="heroTitle">Yazı, ürün ve kod üzerine sakin bir defter.</h1>
-            <p class="heroLead">
-              Burada kahve kültürü, yazılım, marka düşüncesi ve gündelik üretim notları bir araya gelir. Daha az süs, daha net fikir; okunması kolay, arşivlenmesi kolay bir akış.
-            </p>
-            <div class="heroActions">
-              <a class="textArrow" href="#son-yazilar">Son yazıları oku</a>
-              <a class="textArrow mutedArrow" href="projects.html">Projeleri gör</a>
-            </div>
-          </section>
-
-          <section class="section frontPage" id="son-yazilar" aria-labelledby="latestTitle">
-            <div class="sectionHead">
-              <h2 class="sectionKicker" id="latestTitle">Son Yazılar</h2>
-              <a class="textArrow" href="archive.html">Tüm arşiv</a>
-            </div>
-            <ul class="latestList" id="latestPosts" aria-live="polite"></ul>
-          </section>
-
-          <section class="section" aria-labelledby="projectTitle">
-            <div class="sectionHead">
-              <h2 class="sectionKicker" id="projectTitle">Seçili Bağlantılar</h2>
-              <a class="textArrow" href="projects.html">Tüm projeler</a>
-            </div>
-            <div class="projectGrid" id="featuredProjects">
-              <a class="projectCard" href="https://github.com/osmanesad" target="_blank" rel="noopener">
-                <div class="projectLabel">Kod</div>
-                <h3>GitHub</h3>
-                <p class="projectDescription">Açık kaynak denemeler, web işleri ve küçük araçlar.</p>
-                <div class="projectMeta">github.com/osmanesad</div>
-              </a>
-              <a class="projectCard" href="https://osmanesad.medium.com/" target="_blank" rel="noopener">
-                <div class="projectLabel">Yazı</div>
-                <h3>Medium</h3>
-                <p class="projectDescription">Daha uzun notlar, denemeler ve yayınlanmış metinler.</p>
-                <div class="projectMeta">osmanesad.medium.com</div>
-              </a>
-              <a class="projectCard" href="https://dasecoffee.co" target="_blank" rel="noopener">
-                <div class="projectLabel">Kahve</div>
-                <h3>DASE Coffee</h3>
-                <p class="projectDescription">Kahve kültürü ve marka tarafındaki üretimler.</p>
-                <div class="projectMeta">dasecoffee.co</div>
-              </a>
-            </div>
-          </section>
-
-          <section class="section quoteBand" aria-label="Editör notu">
-            <p class="quoteText">Fikir önce sadeleşir; sonra yazıya, ürüne ya da çalışan bir sisteme dönüşür.</p>
-            <div class="quoteBy">Osman Esad</div>
-          </section>
-
-          <section class="section readerShell" id="okuma" hidden aria-labelledby="readerTitle">
-            <div class="readerToolbar">
-              <a class="asideBtn" href="index.html">Ana akışa dön</a>
-              <div class="readerButtons" aria-label="Okuma boyutu">
-                <button class="asideBtn" id="readerFontDown" type="button">A-</button>
-                <button class="asideBtn" id="readerFontReset" type="button">A</button>
-                <button class="asideBtn" id="readerFontUp" type="button">A+</button>
+      <section class="readerLayout">
+        <div class="readerMain">
+          <section class="toolbar" aria-label="Okuma modu">
+            <div class="group">
+              <span class="label">Metin boyutu</span>
+              <div class="seg" role="group" aria-label="Yazı boyutu">
+                <button class="iconBtn" id="decrease" aria-label="Yazıyı küçült">A-</button>
+                <button class="iconBtn" id="increase" aria-label="Yazıyı büyüt">A+</button>
               </div>
             </div>
-            <article>
-              <h1 id="readerTitle">Yükleniyor...</h1>
-              <div class="dateLine" id="readerDate"></div>
-              <div id="readerContent"></div>
-              <div class="actions">
-                <button class="action" id="likeBtn" type="button">Beğen <span id="likeCount">0</span></button>
-                <button class="action" id="shareBtn" type="button">Paylaş</button>
+            <div class="group">
+              <span class="label">Tema</span>
+              <div class="dots" role="group" aria-label="Tema seçimi">
+                <button class="dot" id="t-white" title="Beyaz" aria-label="Beyaz" aria-pressed="true" style="background:#ffffff"></button>
+                <button class="dot" id="t-sepia" title="Sıcak beyaz" aria-label="Sıcak beyaz" aria-pressed="false" style="background:#faf7f2"></button>
+                <button class="dot" id="t-gray" title="Yumuşak gri" aria-label="Yumuşak gri" aria-pressed="false" style="background:#f5f5f5"></button>
+                <button class="dot" id="t-dark" title="Koyu" aria-label="Koyu" aria-pressed="false" style="background:#121212"></button>
               </div>
-            </article>
+            </div>
           </section>
 
-          <footer class="footer">
-            <div>© 2026 Osman Esad. Tüm hakları saklıdır. <span id="betaBadge"></span></div>
-            <nav class="footerNav" aria-label="Alt gezinme">
-              <a href="archive.html">Yazılar</a>
-              <a href="projects.html">Projeler</a>
-              <a href="about.html">Hakkımda</a>
-              <a href="mailto:byesad@gmail.com">İletişim</a>
-              <a href="https://dasecoffee.co" target="_blank" rel="noopener">DASE Coffee</a>
-            </nav>
-          </footer>
-        </div>
-      </main>
-    </div>
+          <article id="article">
+            <h1 id="title">Yükleniyor...</h1>
+            <div class="dateLine" id="dateLine"></div>
+            <div id="content"></div>
 
-    <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
+            <div class="actions" id="actions">
+              <button class="action likeAction" id="likeBtn" type="button" aria-label="Bu notu beğen" aria-pressed="false">
+                <svg class="heart" viewBox="-2 -2 28 28" fill="none" aria-hidden="true">
+                  <path class="heartPath" d="M12 21s-7.2-4.35-9.6-8.5C.64 9.03 2.1 5.9 5.4 5.2c1.86-.4 3.6.35 4.6 1.65 1-1.3 2.74-2.05 4.6-1.65 3.3.7 4.76 3.83 3 7.3C19.2 16.65 12 21 12 21Z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                <span class="likeText">Beğen</span>
+                <span class="count likeCount" id="likeCount" aria-label="Beğeni sayısı">0</span>
+              </button>
+
+              <button class="action" id="shareBtn" aria-label="Paylaş">
+                <svg class="plane" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M21 3L9.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  <path d="M21 3l-7 19-3-8-8-3 18-8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                </svg>
+                <span>Paylaş</span>
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <aside class="sidebar" aria-label="Notlar">
+          <div class="sidebarHead">
+            <strong>Son notlar</strong>
+            <button class="miniButton" id="randomBtn" type="button">Rastgele</button>
+          </div>
+          <ul class="postList" id="postList"></ul>
+        </aside>
+      </section>
+
+      <footer class="siteFooter">
+        <span>@masondase / @dasecoffee.co</span>
+        <span class="beta-badge" id="betaBadge"></span>
+        <div id="buildBadge" class="build-badge" hidden></div>
+      </footer>
+    </main>
+
     <script type="module" src="app.js"></script>
+    <button class="toTop" id="toTop" aria-label="Sayfa başına dön" title="Yukarı">↑</button>
   </body>
 </html>
