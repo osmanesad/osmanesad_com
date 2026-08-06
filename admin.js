@@ -26,19 +26,13 @@ const msg = $("msg");
 const counter = $("counter");
 const preview = $("preview");
 const postsList = $("postsList");
+const editor = $("editor");
 
-const Block = Quill.import("blots/block");
-Block.tagName = "p";
-Quill.register(Block, true);
-
-const quill = new Quill("#editor", {
-  theme: "snow",
-  placeholder: "Yazını buraya yaz. Enter yeni paragraf, Shift+Enter satır kırar.",
-  modules: {
-    toolbar: "#toolbar",
-    clipboard: { matchVisual: false }
-  }
-});
+function getPlainText(html) {
+  const doc = document.implementation.createHTMLDocument("");
+  doc.body.innerHTML = html;
+  return doc.body.textContent || "";
+}
 
 function setMsg(text = "") {
   msg.textContent = text;
@@ -90,6 +84,10 @@ function cleanEditorHtml(html) {
 
   doc.body.querySelectorAll("a").forEach((a) => {
     const href = a.getAttribute("href") || "";
+    if (href.startsWith("#")) {
+      return;
+    }
+
     if (!/^https?:\/\//i.test(href) && !/^mailto:/i.test(href)) {
       a.removeAttribute("href");
     } else {
@@ -102,11 +100,11 @@ function cleanEditorHtml(html) {
 }
 
 function getContentHtml() {
-  return cleanEditorHtml(quill.root.innerHTML);
+  return cleanEditorHtml(editor.value);
 }
 
 function updateCounter() {
-  const words = quill.getText().trim().split(/\s+/).filter(Boolean).length;
+  const words = getPlainText(editor.value).trim().split(/\s+/).filter(Boolean).length;
   counter.textContent = `${words} kelime`;
 }
 
@@ -150,7 +148,7 @@ function currentFormPost(statusOverride) {
   const date = elDate.value;
   const type = elType.value;
   const content_html = getContentHtml();
-  const plainText = quill.getText().trim();
+  const plainText = getPlainText(editor.value).trim();
 
   if (!isValidId(id)) throw new Error("id/slug sadece harf, sayı ve - içermeli. En az 2 karakter olmalı.");
   if (!title) throw new Error("Başlık boş olamaz.");
@@ -172,10 +170,33 @@ async function upsertPost(statusOverride) {
   setMsg("");
   try {
     const post = currentFormPost(statusOverride);
-    const { error } = await supabase.from("posts").upsert(post, { onConflict: "id" });
-    if (error) throw error;
-    setMsg(statusOverride === "published" ? "Yayınlandı." : "Taslak kaydedildi.");
-    await loadPosts();
+    const content = post.content_html;
+    const candidates = ["content_html", "post", "text"];
+    let lastError = null;
+
+    for (const field of candidates) {
+      const payload = {
+        id: post.id,
+        title: post.title,
+        date: post.date,
+        type: post.type,
+        status: post.status,
+        updated_at: post.updated_at,
+        [field]: content
+      };
+
+      const { error } = await supabase.from("posts").upsert(payload, { onConflict: "id" });
+      if (!error) {
+        setMsg(statusOverride === "published" ? "Yayınlandı." : "Taslak kaydedildi.");
+        await loadPosts();
+        return;
+      }
+
+      lastError = error;
+      if (!new RegExp(field, "i").test(error.message)) break;
+    }
+
+    throw lastError;
   } catch (error) {
     setMsg("Hata: " + (error?.message || error));
   }
@@ -219,7 +240,7 @@ function fillForm(post) {
   elTitle.value = post.title ?? "";
   elDate.value = (post.date ?? "").slice(0, 10);
   elType.value = post.type ?? "note";
-  quill.root.innerHTML = post.content_html ?? "";
+  editor.value = post.content_html ?? post.post ?? post.text ?? "";
   updateCounter();
   preview.classList.remove("show");
   previewBtn.textContent = "Önizleme";
@@ -231,7 +252,7 @@ function clearForm() {
   elTitle.value = "";
   elDate.value = new Date().toISOString().slice(0, 10);
   elType.value = "note";
-  quill.setText("");
+  editor.value = "";
   updateCounter();
   preview.classList.remove("show");
   previewBtn.textContent = "Önizleme";
@@ -292,7 +313,7 @@ elId.addEventListener("input", () => { slugTouched = true; });
 elTitle.addEventListener("input", () => {
   if (!slugTouched && !elId.value.trim()) elId.value = slugify(elTitle.value);
 });
-quill.on("text-change", updateCounter);
+editor.addEventListener("input", updateCounter);
 
 loginBtn.addEventListener("click", login);
 logoutBtn.addEventListener("click", logout);

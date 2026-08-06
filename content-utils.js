@@ -21,12 +21,13 @@ const ALLOWED_TAGS = new Set([
   'p',
   'pre',
   'strong',
+  'u',
   'ul'
 ]);
 
-const GLOBAL_ATTRS = new Set(['aria-label', 'aria-hidden']);
+const GLOBAL_ATTRS = new Set(['aria-label', 'aria-hidden', 'align', 'id']);
 const TAG_ATTRS = {
-  a: new Set(['href', 'target', 'rel', 'title']),
+  a: new Set(['href', 'target', 'rel', 'title', 'class']),
   iframe: new Set(['src', 'title', 'allow', 'allowfullscreen', 'loading']),
   img: new Set(['src', 'alt', 'title', 'loading']),
   code: new Set(['class']),
@@ -100,6 +101,11 @@ function sanitizeNode(node) {
     const isAllowed = GLOBAL_ATTRS.has(name) || allowedAttrs.has(name);
 
     if (!isAllowed || name.startsWith('on')) {
+      node.removeAttribute(attr.name);
+      return;
+    }
+
+    if (name === 'id' && !/^[A-Za-z0-9_-]+$/.test(value)) {
       node.removeAttribute(attr.name);
       return;
     }

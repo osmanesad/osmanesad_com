@@ -119,6 +119,53 @@ const postListEl = document.getElementById('postList');
 const titleEl = document.getElementById('title');
 const dateEl = document.getElementById('dateLine');
 const contentEl = document.getElementById('content');
+
+function getEscapedId(id) {
+  if (window.CSS && typeof CSS.escape === 'function') {
+    return CSS.escape(id);
+  }
+  return id.replace(/(["'\\#.;?+*~:\[\]=>\|\^\$])/g, "\\$1");
+}
+
+function handleInternalScroll(event) {
+  if (!(event.target instanceof Element)) return;
+
+  const anchor = event.target.closest('a.internal-scroll[href^="#"]');
+  if (!anchor || !contentEl.contains(anchor)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const href = anchor.getAttribute('href') || '';
+  const targetId = href.slice(1);
+  if (!targetId) return;
+
+  const selector = '#' + getEscapedId(targetId);
+  let attempts = 0;
+
+  function scrollToTarget() {
+    const target = contentEl.querySelector(selector);
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      return;
+    }
+
+    if (attempts < 10) {
+      attempts++;
+      setTimeout(scrollToTarget, 100);
+    }
+  }
+
+  scrollToTarget();
+}
+
+function cleanupContentListeners() {
+  contentEl.removeEventListener('click', handleInternalScroll);
+  window.removeEventListener('beforeunload', cleanupContentListeners);
+}
 const welcomeArchiveMetaEl = document.getElementById('welcomeArchiveMeta');
 const welcomeProjectsMetaEl = document.getElementById('welcomeProjectsMeta');
 
@@ -322,7 +369,7 @@ async function load() {
   // Supabase'ten sadece yayındaki notları çek.
   const { data, error } = await supabase
     .from('posts')
-    .select('id,title,date,type,content_html,status')
+    .select('*')
     .eq('status', 'published')
     .order('date', { ascending: false });
 
@@ -333,7 +380,7 @@ async function load() {
     title: p.title,
     date: p.date,
     type: p.type,
-    content: p.content_html
+    content: p.content_html ?? p.text ?? p.post ?? ""
   }));
 
   const id = location.hash.replace('#', '').trim() || (POSTS[0] && POSTS[0].id);
@@ -357,6 +404,9 @@ load().catch((err) => {
   contentEl.innerHTML = '<p>Notlar yüklenemedi. Lütfen tekrar deneyin.</p>';
   console.error(err);
 });
+
+contentEl.addEventListener('pointerup', handleInternalScroll);
+window.addEventListener('beforeunload', cleanupContentListeners);
 
 // --- Scroll to top (Index) ---
 const toTopBtn = document.getElementById('toTop');

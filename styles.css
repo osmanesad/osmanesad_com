@@ -343,6 +343,11 @@ article h3 {
   line-height: 1.25;
 }
 
+.post-content h2[id],
+.post-content h3[id] {
+  scroll-margin-top: 100px;
+}
+
 article blockquote {
   margin: 0 0 16px;
   padding: 4px 0 4px 18px;

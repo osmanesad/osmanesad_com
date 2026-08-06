@@ -6,9 +6,6 @@
     <meta name="robots" content="noindex" />
     <title>Admin - Yazılar</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-
     <style>
       :root {
         --bg: #f7f6f2;
@@ -88,32 +85,25 @@
       #editorWrap {
         margin-top: 14px;
         border: 1px solid var(--line);
-        overflow: hidden;
         background: #fff;
       }
 
-      #toolbar {
-        border: 0;
-        border-bottom: 1px solid var(--line);
-        background: #fbfaf7;
-        position: sticky;
-        top: 0;
-        z-index: 3;
-      }
-
       #editor {
+        width: 100%;
         min-height: 520px;
-        font-family: var(--sans);
-        font-size: 18px;
-        line-height: 1.78;
+        padding: 22px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 16px;
+        line-height: 1.7;
+        border: none;
+        resize: vertical;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
       }
 
-      .ql-editor { padding: 28px; }
-      .ql-editor h1, .ql-editor h2, .ql-editor h3 {
-        font-family: var(--serif);
-        line-height: 1.2;
+      #editor:focus {
+        outline: none;
       }
-      .ql-editor p { margin-bottom: 1em; }
 
       .toolsLine {
         display: flex;
@@ -159,7 +149,7 @@
         .grid, .row, .row.four { grid-template-columns: 1fr; }
         .top { display: block; }
         #editor { min-height: 420px; font-size: 17px; }
-        .ql-editor, .preview { padding: 18px; }
+        .preview { padding: 18px; }
       }
     </style>
   </head>
@@ -209,34 +199,9 @@
           </div>
 
           <div id="editorWrap">
-            <div id="toolbar">
-              <span class="ql-formats">
-                <select class="ql-header">
-                  <option selected></option>
-                  <option value="2">Başlık</option>
-                  <option value="3">Alt başlık</option>
-                </select>
-              </span>
-              <span class="ql-formats">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
-              </span>
-              <span class="ql-formats">
-                <button class="ql-blockquote"></button>
-                <button class="ql-link"></button>
-              </span>
-              <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-              </span>
-              <span class="ql-formats">
-                <select class="ql-align"></select>
-                <button class="ql-clean"></button>
-              </span>
-            </div>
-            <div id="editor"></div>
+            <textarea id="editor" placeholder="HTML kodunu buraya yaz. Örn: &lt;h2&gt;Başlık&lt;/h2&gt;, &lt;p align=&quot;center&quot;&gt;ortala&lt;/p&gt;, &lt;strong&gt;kalın&lt;/strong&gt;."></textarea>
           </div>
+          <p class="muted" style="margin-top:12px;">HTML etiketlerini burada düzenlersen, sitede önizlemede gördüğün hâli almalıdır. &lt;strong&gt;, &lt;em&gt;, &lt;u&gt;, &lt;h1&gt;-&lt;h6&gt;, &lt;p align=&quot;center&quot;&gt; gibi etiketler korunur.</p>
 
           <div class="toolsLine">
             <span id="msg" class="muted"></span>

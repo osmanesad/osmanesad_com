@@ -104,7 +104,7 @@ async function loadArchive() {
 
     const { data, error } = await supabase
       .from("posts")
-      .select("id,title,date,content_html,status")
+      .select("*")
       .eq("status", "published")
       .order("date", { ascending: false });
 
@@ -114,7 +114,7 @@ async function loadArchive() {
       id: p.id,
       title: p.title,
       date: p.date,
-      excerpt: stripHtml(p.content_html).slice(0, 160)
+      excerpt: stripHtml(p.content_html ?? p.text ?? p.post ?? "").slice(0, 160)
     }));
 
     buildTimeline(POSTS);
